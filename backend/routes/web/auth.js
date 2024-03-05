@@ -5,9 +5,14 @@ const bcrypt = require('bcrypt');
 
 router.post('/reg', async (req, res) => {
   const userInfo = req.body;
+  let rol;
   const {password, confirmPassword ,email } = userInfo;
 
-  if (!email.endsWith('@alumnos.upm.es') && !email.endsWith('@upm.es')) {
+  if(email.endsWith('@alumnos.upm.es')){
+    rol = "student";
+  }else if(email.endsWith('@upm.es')){
+    rol = "professor"
+  }else{
     return res.json({
       code: '1001',
       msg: 'Email must end with @alumnos.upm.es or @upm.es',
@@ -26,7 +31,7 @@ router.post('/reg', async (req, res) => {
   try {
     delete userInfo.confirmPassword;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await UserModel.create({...userInfo, password:hashedPassword});
+    const user = await UserModel.create({...userInfo, password:hashedPassword, rol:rol});
 
     res.json({
       code: '0000',
