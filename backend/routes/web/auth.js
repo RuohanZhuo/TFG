@@ -4,7 +4,8 @@ const UserModel = require('../../models/UserModel');
 const bcrypt = require('bcrypt');
 
 router.post('/reg', async (req, res) => {
-  const {password, email } = req.body;
+  const userInfo = req.body;
+  const {password, confirmPassword ,email } = userInfo;
 
   if (!email.endsWith('@alumnos.upm.es') && !email.endsWith('@upm.es')) {
     return res.json({
@@ -14,9 +15,18 @@ router.post('/reg', async (req, res) => {
     });
   }
 
+  if(password !== confirmPassword){
+    return res.json({
+      code: '1005',
+      msg: 'The two passwords are inconsistent',
+      data: null
+    });
+  }
+
   try {
+    delete userInfo.confirmPassword;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await UserModel.create({...req.body, password:hashedPassword});
+    const user = await UserModel.create({...userInfo, password:hashedPassword});
 
     res.json({
       code: '0000',
