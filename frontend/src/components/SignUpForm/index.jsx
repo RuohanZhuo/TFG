@@ -72,11 +72,11 @@ export default class index extends Component {
         if (data.code === '0000') {
           console.log('Registro exitoso:', data)
         } else {
-          alert.error('Error en el registro:', data.msg)
+          console.log('Error en el registro:', data.msg)
         }
 
       } catch (error) {
-        alert.error('Error en la solicitud:', error)
+        console.log('Error en la solicitud111:', error)
       }
 
     }
