@@ -35,4 +35,7 @@
     width: 100%;
   }
   
-  
+  .invalid-feedback {
+    font-size: 0.7em; /* Tamaño de fuente más pequeño */
+    text-align: left;
+  }

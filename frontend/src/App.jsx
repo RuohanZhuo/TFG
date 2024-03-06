@@ -14,7 +14,7 @@ export default class App extends Component {
         <div>
           <div>This is Home page</div>
           <Routes>
-                <Route path='/' element={App}/>
+                <Route path='/' element={App}/> {/*error*/}
                 <Route path="/sign" element={<SignUp/>}/>
                 <Route path="/login" element={<Login/>}/>
           </Routes>
