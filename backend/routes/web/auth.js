@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.json({
         code: '1003',
-        msg: 'Incorrect username or password',
+        msg: 'Incorrect username',
         data: null
       });
     }
@@ -84,7 +84,7 @@ router.post('/login', async (req, res) => {
     if (!passwordMatch) {
       return res.json({
         code: '1003',
-        msg: 'Incorrect username or password',
+        msg: 'Incorrect password',
         data: null
       });
     }
