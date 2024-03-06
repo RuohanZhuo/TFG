@@ -28,8 +28,27 @@ router.post('/reg', async (req, res) => {
     });
   }
 
+  const existingUsername = await UserModel.findOne({username:userInfo.username });
+  if (existingUsername) {
+    return res.json({
+      code: '1006',
+      msg: 'Username already exists',
+      data: null
+    });
+  }
+
+  const existingEmail = await UserModel.findOne({email:userInfo.email});
+  if (existingEmail) {
+    return res.json({
+      code: '1007',
+      msg: 'Email already exists',
+      data: null
+    });
+  }
+
   try {
     delete userInfo.confirmPassword;
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({...userInfo, password:hashedPassword, rol:rol});
 
@@ -38,6 +57,7 @@ router.post('/reg', async (req, res) => {
       msg: 'Registration success',
       data: user
     });
+    
   } catch (err) {
     res.json({
       code: '1002',
