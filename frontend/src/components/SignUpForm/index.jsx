@@ -1,120 +1,118 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import classnames from 'classnames'
-import { NavLink } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import './index.css'
 
+export default function Index(){
 
-export default class index extends Component {
+  const [state, setState] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    errors: {},
+  });
 
-    state = {
-        username:'',
-        email:'',
-        password:'',
-        confirmPassword:'',
-        errors:{}
+  const navigate = useNavigate()
+
+  const { username, email, password, confirmPassword, errors } = state
+
+  const validateForm = () => {
+    const errors = {}
+
+    if (username.trim() === '') {
+      errors.username = 'Username is required'
     }
 
-    validateForm = () => {
+    if (email.trim() === '') {
+      errors.email = 'Email is required';
+    } else if (!email.endsWith('@alumnos.upm.es') && !email.endsWith('@upm.es')) {
+      errors.email = 'Email must end with @alumnos.upm.es or @upm.es'
+    }
 
-      const { username, email, password, confirmPassword } = this.state
+    if (password.trim() === '') {
+      errors.password = 'Password is required'
+    }
 
+    if (confirmPassword.trim() === '') {
+      errors.confirmPassword = 'Confirm Password is required'
+    } else if (password !== confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match'
+    }
+
+    setState({ ...state, errors });
+    return Object.keys(errors).length === 0
+  }
+
+  const onSubmit = async (event) => {
+    event.preventDefault()
+
+    if (!validateForm()) {
+      return
+    }
+
+    try {
       const errors = {}
 
-      if (username === '') {
-        errors.username = 'Username is required'
-      }
-  
-      if (email === '') {
-        errors.email = 'Email is required'
-      } else if (!email.endsWith('@alumnos.upm.es') && !email.endsWith('@upm.es')) {
-        errors.email = 'Email must end with @alumnos.upm.es or @upm.es'
-      } 
-  
-      if (password === '') {
-        errors.password = 'Password is required'
-      }
-  
-      if (confirmPassword === '') {
-        errors.confirmPassword = 'Confirm Password is required'
-      } else if (password !== confirmPassword) {
-        errors.confirmPassword = 'Passwords do not match'
+      const response = await axios.post('http://localhost:3001/reg', {
+        username,
+        email,
+        password,
+        confirmPassword,
+      });
+
+      const data = response.data
+
+      if (data.code === '0000') {
+        alert(data.msg);
+        navigate('/login');
+      }else if (data.code === '1006' || data.code === '1007') {
+        errors[data.code === '1006' ? 'username' : 'email'] = data.msg;
+      } else {
+        console.log('error', data.msg);
       }
 
-      this.setState({ errors });
-      return Object.keys(errors).length === 0
 
+      setState({ ...state, errors });
+    } catch (error) {
+      console.log('Error en la solicitud:', error)
     }
+  }
 
-    onSubmit = async (event) => {
-
-      event.preventDefault();
-
-      if (!this.validateForm()) {
-        return
-      }
-    
-      try {
-        
-        const { username, email, password, confirmPassword } = this.state
-
-        //const errors = {}
-
-        const response = await axios.post('http://localhost:3001/reg', {
-          username,
-          email,
-          password,
-          confirmPassword,
-        })
-    
-        const data = response.data;
-      
-        if (data.code === '0000') {
-          console.log('Registro exitoso:', data)
-        } else {
-          console.log('Error en el registro:', data.msg)
-        }
-
-      } catch (error) {
-        console.log('Error en la solicitud111:', error)
-      }
-
-    }
-
-    changeHandle = (type) => (event) =>{
-      this.setState({[type]:event.target.value})
-    }
-
-    render() {
-
-      const {username, email, password, confirmPassword, errors} = this.state
+  const changeHandle = (type) => (event) => {
+    setState({ ...state, [type]: event.target.value })
+  }
 
       return (
-      <form className='data-form' onSubmit={this.onSubmit}>
+      <form className='data-form' onSubmit={onSubmit}>
         <div className='container'>
           <h1 className="text-center mb-4">Sign Up</h1>
           <div className="mb-3">
-            <input type="text" className={classnames("form-control", {'is-invalid':errors.username})} placeholder="Username" value={username} onChange={this.changeHandle('username')}/>
+            <input type="text" className={classnames("form-control", {'is-invalid':errors.username})} placeholder="Username" value={username} onChange={changeHandle('username')}/>
             {errors.username && <div className='invalid-feedback'>{errors.username}</div>}
           </div>
             <div className="mb-3">
-            <input type="email" className={classnames("form-control",{'is-invalid':errors.email})} placeholder="Email" value={email} onChange={this.changeHandle('email')} />
+            <input type="email" className={classnames("form-control",{'is-invalid':errors.email})} placeholder="Email" value={email} onChange={changeHandle('email')} />
             {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
           </div>
           <div className="mb-3">
-            <input type="password" className={classnames("form-control",{'is-invalid':errors.password})} placeholder="Password" value={password} onChange={this.changeHandle('password')} />
+            <input type="password" className={classnames("form-control",{'is-invalid':errors.password})} placeholder="Password" value={password} onChange={changeHandle('password')} />
             {errors.password && <div className='invalid-feedback'>{errors.password}</div>}
           </div>
           <div className="mb-3">
-            <input type="password" className={classnames("form-control",{'is-invalid':errors.confirmPassword})} placeholder="Confirm assword" value={confirmPassword} onChange={this.changeHandle('confirmPassword')} />
+            <input type="password" className={classnames("form-control",{'is-invalid':errors.confirmPassword})} placeholder="Confirm assword" value={confirmPassword} onChange={changeHandle('confirmPassword')} />
             {errors.confirmPassword && <div className='invalid-feedback'>{errors.confirmPassword}</div>}
           </div>
-          <button type="submit" className='btn btn-primary btn-block'>Register</button>
-          <p className='text-center mt-2'>
-              Already have an account? <NavLink to='/login'>Log in</NavLink>
+          <button type="submit" className='btn btn-primary btn-block mt-3'>Register</button>
+          <p className="text-center mt-2">
+          Already have an account?{' '}
+          <span className="link" onClick={() => navigate('/login')}>Log in</span>
           </p>
         </div>
       </form>
       )
-    }
+    
 }
+
+

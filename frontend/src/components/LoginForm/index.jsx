@@ -1,61 +1,70 @@
-import React, { Component } from 'react'
-//import './index.css'
+import React, { useState } from 'react';
+import axios from 'axios'
+import classnames from 'classnames'
+import { useNavigate } from 'react-router-dom';
+import './index.css';
 
-export default class index extends Component {
+export default function Login(){
 
-  state = {
-      username:'',
-      password:''
-    }
-    onSubmit = async(e)=>{
-        e.preventDefault();
-        const {username, password} = this.state
+  const [state, setState] = useState({
+    username: '',
+    password: '',
+    errorLogin:''
+  });
 
-        try {
-          const response = await fetch('http://localhost:3001/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password }),
-          });
-    
-          const data = await response.json();
-    
-          if (data.code === '0000') {
-            console.log('Inicio de sesión exitoso:', data);
-          } else {
-            console.error('Error en el inicio de sesión:', data.msg);
+  const navigate = useNavigate();
 
-          }
-        } catch (error) {
-          console.error('Error en la solicitud:', error);
-        }
-    }
+  const { username, password, errorLogin } = state;
 
-    changeHandle = (type)=>{
-      return (event) =>{
-          this.setState({[type]:event.target.value})
+  const onSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+
+      const response = await axios.post('http://localhost:3001/login', {
+        username,
+        password,
+      });
+
+      const data =  response.data;
+
+      if (data.code === '0000') {
+        alert('Inicio de sesión exitoso');
+        console.log(data)
+        navigate('/');
+      } else if (data.code === '1003'){
+        setState({ ...state, errorLogin: data.msg });
+      }else{
+        console.error('Error en el inicio de sesión:', data.msg);
       }
+
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
     }
+  };
 
-  render() {
+  const changeHandle = (type) => (event) => {
+    setState({ ...state, [type]: event.target.value });
+  };
 
-    const {username, password} = this.state
-
-    return (
-    <form className="data-form" onSubmit={this.onSubmit}>
+  return (
+    <form className="data-form" onSubmit={onSubmit}>
       <div className="container">
         <h1 className="text-center mb-4">Login</h1>
         <div className="mb-3">
-          <input type="text" className="form-control" placeholder="Username" value={username} onChange={this.changeHandle('username')} />
+          <input type="text" className={classnames("form-control",{'is-invalid':errorLogin==='Incorrect username'})} placeholder="Username" value={state.username} onChange={changeHandle('username')}/>
         </div>
         <div className="mb-3">
-          <input type="password" className="form-control" placeholder="Password" value={password} onChange={this.changeHandle('password')}/>
+          <input type="password" className={classnames("form-control",{'is-invalid':errorLogin==='Incorrect password'})} placeholder="Password" value={state.password} onChange={changeHandle('password')}/>
+          {errorLogin && <div>{errorLogin}</div>}
         </div>
         <button type="submit" className="btn btn-primary btn-block">Login</button>
+        <p className="text-center mt-2">
+          Don't have an account?{' '}
+          <span className="link" onClick={() => navigate('/sign')}>Sign up</span>
+        </p>
       </div>
     </form>
-    )
-  }
-}
+  );
+};
+

@@ -34,4 +34,19 @@
     border: none;
     width: 100%;
   }
+
+  .invalid-feedback {
+    font-size: 0.7em; 
+    text-align: left;
+  }
+
   
+  .link {
+    color: #007bff;
+    cursor: pointer;
+    transition: color 0.3s ease; 
+  }
+  
+  .link:hover {
+    color: #0056b3; 
+  }

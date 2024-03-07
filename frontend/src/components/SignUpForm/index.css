@@ -36,6 +36,17 @@
   }
   
   .invalid-feedback {
-    font-size: 0.7em; /* Tamaño de fuente más pequeño */
+    font-size: 0.7em;
     text-align: left;
+  }
+
+  .link {
+    color: #007bff; 
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease; 
+  }
+  
+  .link:hover {
+    color: #0056b3; 
   }
