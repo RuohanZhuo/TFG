@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const UserModel = require('../../models/UserModel');
+const checkLoginMiddleware = require('../../middlewares/checkLoginMiddleware')
 const bcrypt = require('bcrypt');
 
 router.post('/reg', async (req, res) => {
@@ -107,7 +108,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/logout', (req, res) => {
+router.post('/logout', checkLoginMiddleware, (req, res) => {
 
   try {
 

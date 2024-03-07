@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom';
 import './index.css';
 
-export default function Login(){
+export default function Login(props){
 
   const [state, setState] = useState({
     username: '',
@@ -31,6 +31,7 @@ export default function Login(){
       if (data.code === '0000') {
         alert('Inicio de sesión exitoso');
         console.log(data)
+        props.onLogin()
         navigate('/');
       } else if (data.code === '1003'){
         setState({ ...state, errorLogin: data.msg });

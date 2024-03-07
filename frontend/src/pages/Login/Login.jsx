@@ -4,7 +4,7 @@ import LoginForm from '../../components/LoginForm'
 export default class Login extends Component {
   render() {
     return (
-      <LoginForm/>
+      <LoginForm onLogin={this.props.onLogin}/>
     )
   }
 }
