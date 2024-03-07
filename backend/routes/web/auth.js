@@ -109,13 +109,23 @@ router.post('/login', async (req, res) => {
 
 router.post('/logout', (req, res) => {
 
-  req.session.destroy(() => {
+  try {
+
+    req.session.destroy(() => {
+      res.json({
+        code: '0000',
+        msg: 'Logout successful',
+        data: null
+      });
+    });
+  } catch (err) {
+    console.error('Error while logging out:', err);
     res.json({
-      code: '0000',
-      msg: 'login successful',
+      code: '1005',
+      msg: 'Logout failed',
       data: null
     });
-  })
+  }
 });
 
 module.exports = router;
