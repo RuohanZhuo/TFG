@@ -14,19 +14,19 @@ const {DBHOST, DBPORT, DBNAME, secret} = require('./config/config');
 
 var app = express();
 
-app.use(session({
-  name: 'sid',
-  secret: secret,
-  saveUninitialized: false,
-  resave: true,
-  store: MongoStore.create({
-    mongoUrl: `mongodb://${DBHOST}:${DBPORT}/${DBNAME}`
-  }),
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 7
-  },
-}))
+// app.use(session({
+//   name: 'sid',
+//   secret: secret,
+//   saveUninitialized: false,
+//   resave: true,
+//   store: MongoStore.create({
+//     mongoUrl: `mongodb://${DBHOST}:${DBPORT}/${DBNAME}`
+//   }),
+//   cookie: {
+//     httpOnly: true,
+//     maxAge: 1000 * 60 * 60 * 24 * 7
+//   },
+// }))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

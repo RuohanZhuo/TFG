@@ -1,7 +1,11 @@
 var express = require('express');
 var router = express.Router();
+const jwt = require('jsonwebtoken');
+const {secret} = require('../../config/config');
 const UserModel = require('../../models/UserModel');
-const checkLoginMiddleware = require('../../middlewares/checkLoginMiddleware')
+const TokenModel = require('../../models/TokenModel');
+// const checkLoginMiddleware = require('../../middlewares/checkLoginMiddleware');
+const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 const bcrypt = require('bcrypt');
 
 router.post('/reg', async (req, res) => {
@@ -90,16 +94,23 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    req.session.username = user.username;
-    req.session._id = user._id;
+    // req.session.username = user.username;
+    // req.session._id = user._id;
+    const token = jwt.sign({
+      username: user.username,
+      _id: user._id
+    }, secret, {
+      expiresIn: 60 * 60 * 24
+    });
 
     res.json({
       code: '0000',
       msg: 'login successful',
-      data: user
+      data: token
     });
 
   } catch (err) {
+    console.log(err)
     res.json({
       code: '1004',
       msg: 'Database read failed',
@@ -108,16 +119,27 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/logout', checkLoginMiddleware, (req, res) => {
+router.post('/logout', checkTokenMiddleware, async (req, res) => {
 
   try {
 
-    req.session.destroy(() => {
-      res.json({
-        code: '0000',
-        msg: 'Logout successful',
-        data: null
-      });
+    // req.session.destroy(() => {
+    //   res.json({
+    //     code: '0000',
+    //     msg: 'Logout successful',
+    //     data: null
+    //   });
+    // });
+
+    console.log("11111111111")
+    const token = req.get('token');
+    await TokenModel.create({ token: token});
+    console.log("2222222222222");
+
+    res.json({
+      code: '0000',
+      msg: 'Logout successful',
+      data: null
     });
   } catch (err) {
     console.error('Error while logging out:', err);

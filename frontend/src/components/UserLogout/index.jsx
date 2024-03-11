@@ -22,6 +22,8 @@ export default function Logout(props) {
         console.log(data)
         props.onLogout()
         navigate('/');
+      }else{
+        console.log(data)
       }
 
     } catch (error) {
