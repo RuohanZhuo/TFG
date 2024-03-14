@@ -131,10 +131,9 @@ router.post('/logout', checkTokenMiddleware, async (req, res) => {
     //   });
     // });
 
-    console.log("11111111111")
-    const token = req.get('token');
+    const authHeader = req.get('Authorization');
+    const token = authHeader.substring(7);
     await TokenModel.create({ token: token});
-    console.log("2222222222222");
 
     res.json({
       code: '0000',

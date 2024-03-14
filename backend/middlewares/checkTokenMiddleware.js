@@ -3,16 +3,17 @@ const {secret} = require('../config/config');
 const TokenModel = require('../models/TokenModel');
 module.exports = async (req, res, next) => {
 
-  const token = req.get('token');
+  const authHeader = req.get('Authorization');
 
-  if (!token) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.json({
       code: '1008',
-      msg: 'token is missing',
+      msg: 'Token is missing or format is incorrect',
       data: null
     })
   }
 
+  const token = authHeader.substring(7);
   const tokenInBlacklist = await TokenModel.findOne({ token: token });
   if (tokenInBlacklist) {
     return res.json({

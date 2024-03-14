@@ -11,9 +11,15 @@ export default function Logout(props) {
   const onSubmit = async (event) => {
     event.preventDefault()
 
+    const token = localStorage.getItem('token');
+
     try {
 
-      const response = await axios.post('http://localhost:3001/logout');
+      const response = await axios.post('http://localhost:3001/logout', {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
       const data =  response.data;
 
@@ -21,6 +27,7 @@ export default function Logout(props) {
         alert('logout exitoso');
         console.log(data)
         props.onLogout()
+        localStorage.removeItem('token');
         navigate('/');
       }else{
         console.log(data)

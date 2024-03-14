@@ -31,6 +31,7 @@ export default function Login(props){
       if (data.code === '0000') {
         alert('Inicio de sesión exitoso');
         console.log(data)
+        localStorage.setItem('token', data.data)
         props.onLogin()
         navigate('/');
       } else if (data.code === '1003'){
