@@ -9,7 +9,6 @@ router.post('/classroom', checkTokenMiddleware, checkIsProfessorMiddleware, asyn
   const classroomInfo = req.body
 
   try {
-    console.log(classroomInfo)
     const classroom = await ClassroomModel.create({ ...classroomInfo })
     res.json({
       code: '0000',

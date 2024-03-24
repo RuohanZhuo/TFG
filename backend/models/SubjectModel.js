@@ -2,20 +2,20 @@ const mongoose = require('mongoose');
 
 let SubjectSchema = new mongoose.Schema({
 
-    SubjectName:{
+    subjectName:{
         type: String,
         required: true,
         unique: true
     },
-    Capacity:{
+    capacity:{
         type: Number,
         required:true
     },
-    Students: [{
+    students: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users'
     }],
-    Professor: {
+    professor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
         required: true

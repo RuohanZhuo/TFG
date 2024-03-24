@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 const authRouter = require('./routes/web/auth');
 const classroomRouter = require('./routes/web/classroom');
+const subjectRouter = require('./routes/web/subject');
 
 //import express-session 
 const session = require("express-session");
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', authRouter);
 app.use('/', classroomRouter);
+app.use('/', subjectRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
