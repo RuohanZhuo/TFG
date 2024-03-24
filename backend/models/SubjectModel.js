@@ -11,15 +11,18 @@ let SubjectSchema = new mongoose.Schema({
         type: Number,
         required:true
     },
-    Student:{
-
-    },
-    Professor:{
-
+    Students: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+    }],
+    Professor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
     }
 
 });
 
-let SubjectModel = mongoose.model('users', SubjectSchema);
+let SubjectModel = mongoose.model('subjects', SubjectSchema);
 
 module.exports = SubjectModel;
