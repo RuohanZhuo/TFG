@@ -46,11 +46,17 @@ export default function Logout(props) {
             <li className="nav-item">
               <NavLink className='home-nav' to='/'>Home</NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className='home-nav' to='/classroom'>Classroom</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className='home-nav' to='/subject'>Subject</NavLink>
+            </li>
           </ul>
           <ul className="navbar-nav ms-auto">
             <li>
               <form onSubmit={onSubmit}>
-              <button type="submit" className='logout-nav'>logout</button>
+                <button type="submit">logout</button>
               </form>
             </li>
           </ul>

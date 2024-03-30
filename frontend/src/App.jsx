@@ -4,6 +4,11 @@ import SignUp from './pages/SignUp/SignUp'
 import Login from './pages/Login/Login'
 import Header from './components/Header'
 import UserHeader from './pages/UserHeader/UserHeader'
+import ClassroomPage from './pages/ClassroomPage/ClassroomPage'
+import Subject from './pages/Subject/Subject'
+import CreateClass from './pages/CreateClass/CreateClass'
+import CreateSubject from './pages/CreateSubject/CreateSubject'
+
 
 export default class App extends Component {
 
@@ -33,6 +38,10 @@ export default class App extends Component {
             <Route path="/" element={<div>This is Home page</div>} />
             <Route path="/sign" element={<SignUp />} />
             <Route path="/login" element={<Login onLogin={this.handleLogin}/>} />
+            <Route path="/classroom" element={<ClassroomPage />} />
+            <Route path="/subject" element={<Subject />} />
+            <Route path="/classroom/createClass" element={<CreateClass/>} />
+            <Route path="/createSubject" element={<CreateSubject/>} />
           </Routes>
         </div>
       </div>

@@ -32,7 +32,7 @@ export default function Login(props){
         alert('Inicio de sesión exitoso');
         console.log(data)
         localStorage.setItem('token', data.data)
-        props.onLogin()
+        props.onLogin(data.data)
         navigate('/');
       } else if (data.code === '1003'){
         setState({ ...state, errorLogin: data.msg });

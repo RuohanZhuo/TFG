@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom'
 import './index.css'
 
-export default function Index(){
+export default function SignUp(){
 
   const [state, setState] = useState({
     username: '',
