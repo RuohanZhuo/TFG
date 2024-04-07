@@ -8,6 +8,16 @@ const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 router.post('/subject', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     const subjectInfo = req.body;
 
+    const existingSubject1 = await SubjectModel.findOne({subjectName:subjectInfo.subjectName })
+    const existingSubject2 = await SubjectModel.findOne({acronym:subjectInfo.acronym })
+    if (existingSubject1 || existingSubject2) {
+      return res.json({
+        code: '4007',
+        msg: 'Subject already exists',
+        data: null
+      });
+    }
+
     try {
         const subject = await SubjectModel.create({ ...subjectInfo, professor: req.user._id})
         res.json({
@@ -25,7 +35,7 @@ router.post('/subject', checkTokenMiddleware, checkIsProfessorMiddleware, async 
     }
 });
 
-router.get('/subject', async (req, res) => {
+router.get('/subject', checkTokenMiddleware, async (req, res) => {
     try {
         const subjects = await SubjectModel.find({});
         res.json({
@@ -43,7 +53,7 @@ router.get('/subject', async (req, res) => {
     }
 });
 
-router.get('/subject/:id', async (req, res) => {
+router.get('/subject/:id', checkTokenMiddleware, async (req, res) => {
     try {
         const subject = await SubjectModel.findById(req.params.id);
         if (!subject) {

@@ -7,14 +7,15 @@ let SubjectSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    acronym:{
+        type: String,
+        required: true,
+        unique: true
+    },
     capacity:{
         type: Number,
         required:true
     },
-    students: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
-    }],
     professor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',

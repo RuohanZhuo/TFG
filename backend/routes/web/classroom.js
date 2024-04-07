@@ -8,6 +8,15 @@ const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 router.post('/classroom', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
   const classroomInfo = req.body
 
+  const existingClassroom = await ClassroomModel.findOne({classroomName:classroomInfo.classroomName });
+  if (existingClassroom) {
+    return res.json({
+      code: '3007',
+      msg: 'Classroom already exists',
+      data: null
+    });
+  }
+
   try {
     const classroom = await ClassroomModel.create({ ...classroomInfo })
     res.json({
@@ -25,7 +34,7 @@ router.post('/classroom', checkTokenMiddleware, checkIsProfessorMiddleware, asyn
   }
 });
 
-router.get('/classroom', async (req, res) => {
+router.get('/classroom', checkTokenMiddleware, checkIsProfessorMiddleware,async (req, res) => {
   try {
     const classrooms = await ClassroomModel.find({});
     res.json({
@@ -43,7 +52,7 @@ router.get('/classroom', async (req, res) => {
   }
 });
 
-router.get('/classroom/:id', async (req, res) => {
+router.get('/classroom/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
   try {
     const classroom = await ClassroomModel.findById(req.params.id);
     if (!classroom) {
