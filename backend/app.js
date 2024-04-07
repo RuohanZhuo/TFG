@@ -8,6 +8,7 @@ const authRouter = require('./routes/web/auth');
 const classroomRouter = require('./routes/web/classroom');
 const subjectRouter = require('./routes/web/subject');
 const userRouter = require('./routes/web/user');
+const studentSubjectRouter = require('./routes/web/studentSubject');
 
 //import express-session 
 const session = require("express-session");
@@ -45,6 +46,7 @@ app.use('/', authRouter);
 app.use('/', classroomRouter);
 app.use('/', subjectRouter);
 app.use('/', userRouter);
+app.use('/', studentSubjectRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
