@@ -71,7 +71,7 @@ router.get('/subject/:id', checkTokenMiddleware, async (req, res) => {
     } catch (err) {
         console.log(err)
         res.json({
-            code: '4004',
+            code: '4002',
             msg: 'Error while fetching the subject',
             data: null
         });
@@ -101,6 +101,35 @@ router.delete('/subject/:id', checkTokenMiddleware, checkIsProfessorMiddleware, 
         data: null
       });
     }
-  });
+});
+
+router.get('/subject/professor/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
+  try {
+    const professorId = req.params.id;
+
+    const subjects = await SubjectModel.find({ professor: professorId });
+
+    if (subjects.length > 0) {
+      res.json({
+        code: '0000',
+        msg: 'Successfully retrieved the subject',
+        data: subjects
+      });
+    } else {
+      res.json({
+        code: '4004',
+        msg: 'No Subjects found for this professor',
+        data: null
+      });
+    }
+  } catch (err) {
+    console.log(err)
+    res.json({
+      code: '4002',
+      msg: 'Error while fetching the subject',
+      data: null
+    });
+  }
+});
 
 module.exports = router;

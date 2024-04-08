@@ -63,4 +63,33 @@ router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware,
     }
 });
 
+router.get('/subject/student/:id', checkTokenMiddleware, async (req, res) => {
+    try {
+      const studentId = req.params.id;
+  
+      const studentSubjects = await StudentSubjectModel.find({student: studentId}).populate('subject');
+  
+      if (studentSubjects.length > 0) {
+        res.json({
+            code: '0000',
+            msg: 'Successfully retrieved the subject',
+            data: studentSubjects.map(course => course.subject)
+          });
+      } else {
+        res.json({
+            code: '5006',
+            msg: 'No Subjects found for this student',
+            data: null
+          });
+      }
+    } catch (err) {
+        console.log(err)
+        res.json({
+          code: '5007',
+          msg: 'Error while fetching the subject',
+          data: null
+        });
+    }
+  });
+
 module.exports = router;
