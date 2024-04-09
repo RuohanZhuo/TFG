@@ -76,7 +76,7 @@ router.get('/subject/student/:id', checkTokenMiddleware, async (req, res) => {
             data: studentSubjects.map(course => course.subject)
           });
       } else {
-        res.json({
+        return res.json({
             code: '5006',
             msg: 'No Subjects found for this student',
             data: null
