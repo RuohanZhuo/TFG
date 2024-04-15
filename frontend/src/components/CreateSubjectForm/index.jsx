@@ -31,6 +31,21 @@ export default function CreateSubject() {
     return Object.keys(errors).length === 0
   }
 
+  const generateAcronym = (subjectName) => {
+
+    const word = subjectName.split(' ');
+
+    let acronym = '';
+
+    word.forEach(word => {
+      if (!(word.toLowerCase() === 'de')){
+        acronym += word.charAt(0).toUpperCase();
+      }
+    });
+  
+    return acronym;
+  }
+
   const onSubmit = async (event) => {
     event.preventDefault()
 
@@ -42,9 +57,11 @@ export default function CreateSubject() {
 
     try {
       const errors = {}
+      let acronym = generateAcronym(subjectName)
 
       const response = await axios.post('http://localhost:3001/subject', {
         subjectName,
+        acronym,
         capacity,
       }, {
         headers: {

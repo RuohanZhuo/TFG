@@ -28,6 +28,9 @@ export default function Logout(props) {
         console.log(data)
         props.onLogout()
         localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('rol');
+        localStorage.removeItem('_id');
         navigate('/');
       }else{
         console.log(data)

@@ -3,12 +3,20 @@ import axios from 'axios';
 import Subject from '../Subject';
 
 export default function SubjectList() {
+
+    const token = localStorage.getItem('token');
+    const _id = localStorage.getItem('_id')
+
     const [items, setItems] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/subject');
+                const response = await axios.get(`http://localhost:3001/subject/professor/${_id}`,{
+                    headers: {
+                      'Authorization': `Bearer ${token}`
+                    }
+                  });
                 setItems(response.data.data);
             } catch (error) {
                 console.error('Error al obtener datos:', error);

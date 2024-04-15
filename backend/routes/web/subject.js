@@ -119,7 +119,7 @@ router.get('/subject/professor/:id', checkTokenMiddleware, checkIsProfessorMiddl
       res.json({
         code: '4004',
         msg: 'No Subjects found for this professor',
-        data: null
+        data: subjects
       });
     }
   } catch (err) {
