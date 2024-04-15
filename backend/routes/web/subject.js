@@ -35,6 +35,35 @@ router.post('/subject', checkTokenMiddleware, checkIsProfessorMiddleware, async 
     }
 });
 
+router.get('/subject/professor', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
+  try {
+    const professorId = req.user._id;
+
+    const subjects = await SubjectModel.find({ professor: professorId });
+
+    if (subjects.length > 0) {
+      res.json({
+        code: '0000',
+        msg: 'Successfully retrieved the subject',
+        data: subjects
+      });
+    } else {
+      res.json({
+        code: '4004',
+        msg: 'No Subjects found for this professor',
+        data: subjects
+      });
+    }
+  } catch (err) {
+    console.log(err)
+    res.json({
+      code: '4002',
+      msg: 'Error while fetching the subject',
+      data: null
+    });
+  }
+});
+
 router.get('/subject', checkTokenMiddleware, async (req, res) => {
     try {
         const subjects = await SubjectModel.find({});
@@ -46,7 +75,7 @@ router.get('/subject', checkTokenMiddleware, async (req, res) => {
     } catch (err) {
         console.log(err)
         res.json({
-            code: '4002',
+            code: '4008',
             msg: 'Error while fetching subjects',
             data: null
         });
@@ -71,7 +100,7 @@ router.get('/subject/:id', checkTokenMiddleware, async (req, res) => {
     } catch (err) {
         console.log(err)
         res.json({
-            code: '4002',
+            code: '4009',
             msg: 'Error while fetching the subject',
             data: null
         });
@@ -103,33 +132,6 @@ router.delete('/subject/:id', checkTokenMiddleware, checkIsProfessorMiddleware, 
     }
 });
 
-router.get('/subject/professor/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
-  try {
-    const professorId = req.params.id;
 
-    const subjects = await SubjectModel.find({ professor: professorId });
-
-    if (subjects.length > 0) {
-      res.json({
-        code: '0000',
-        msg: 'Successfully retrieved the subject',
-        data: subjects
-      });
-    } else {
-      res.json({
-        code: '4004',
-        msg: 'No Subjects found for this professor',
-        data: subjects
-      });
-    }
-  } catch (err) {
-    console.log(err)
-    res.json({
-      code: '4002',
-      msg: 'Error while fetching the subject',
-      data: null
-    });
-  }
-});
 
 module.exports = router;

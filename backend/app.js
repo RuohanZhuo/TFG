@@ -44,11 +44,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', authRouter);
-app.use('/', classroomRouter);
-app.use('/', subjectRouter);
 app.use('/', userRouter);
 app.use('/', studentSubjectRouter);
 app.use('/', timetableRouter);
+app.use('/', classroomRouter);
+app.use('/', subjectRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
