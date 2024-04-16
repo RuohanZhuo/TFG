@@ -9,10 +9,10 @@ const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 
 router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     try {
-        const { studentId, subjectId } = req.body;
+        const { student, subject } = req.body;
 
-        const student = await UserModel.findOne({ _id: studentId, rol: 'student' });
-        if (!student) {
+        const studentId = await UserModel.findOne({ _id: student, rol: 'student' });
+        if (!studentId) {
             return res.json({
                 code: '5001',
                 msg: 'Student not exist',
@@ -20,8 +20,8 @@ router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware,
             });
         }
 
-        const subject = await SubjectModel.findById(subjectId);
-        if (!subject) {
+        const subjectId = await SubjectModel.findById(subject);
+        if (!subjectId) {
             return res.json({
                 code: '5002',
                 msg: 'Subject not exist',
@@ -29,7 +29,7 @@ router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware,
             });
         }
 
-        const enrollment = await StudentSubjectModel.findOne({ student: studentId, subject: subjectId });
+        const enrollment = await StudentSubjectModel.findOne({ student, subject });
         if (enrollment) {
             return res.json({
                 code: '5003',
@@ -38,8 +38,8 @@ router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware,
             });
         }
 
-        const enrolledStudentsCount = await StudentSubjectModel.countDocuments({ subject: subjectId });
-        if (enrolledStudentsCount >= subject.capacity) {
+        const enrolledStudentsCount = await StudentSubjectModel.countDocuments({ subject });
+        if (enrolledStudentsCount >= subjectId.capacity) {
             return res.json({
                 code: '5004',
                 msg: 'Subject has no more capacity',
@@ -47,7 +47,7 @@ router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware,
             });
         }
 
-        await StudentSubjectModel.create({ student: studentId, subject: subjectId });
+        await StudentSubjectModel.create({ student, subject });
         res.json({
             code: '0000',
             msg: 'Student enrolled successfully',

@@ -10,6 +10,7 @@ const subjectRouter = require('./routes/web/subject');
 const userRouter = require('./routes/web/user');
 const studentSubjectRouter = require('./routes/web/studentSubject');
 const timetableRouter = require('./routes/web/timetable');
+const scheduleRouter = require('./routes/web/schedule');
 
 //import express-session 
 const session = require("express-session");
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', authRouter);
 app.use('/', userRouter);
 app.use('/', studentSubjectRouter);
+app.use('/', scheduleRouter);
 app.use('/', timetableRouter);
 app.use('/', classroomRouter);
 app.use('/', subjectRouter);
