@@ -3,6 +3,8 @@ import axios from 'axios'
 import { NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 import './index.css'
+import HeaderProfessor from '../HeaderProfessor'
+import HeaderStudent from '../HeaderStudent'
 
 export default function Logout(props) {
 
@@ -27,8 +29,6 @@ export default function Logout(props) {
         alert('logout exitoso');
         console.log(data)
         props.onLogout()
-        localStorage.removeItem('username');
-        localStorage.removeItem('rol');
         navigate('/');
       }else{
         console.log(data)
@@ -39,6 +39,8 @@ export default function Logout(props) {
     }
   }
 
+  const rol = localStorage.getItem("rol")
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
       <div className="container-fluid">
@@ -47,12 +49,7 @@ export default function Logout(props) {
             <li className="nav-item">
               <NavLink className='home-nav' to='/'>Home</NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className='home-nav' to='/classroom'>Classroom</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className='home-nav' to='/subject'>Subject</NavLink>
-            </li>
+            {rol === 'professor' ? <HeaderProfessor/> : <HeaderStudent/>}
           </ul>
           <ul className="navbar-nav ms-auto">
             <li>

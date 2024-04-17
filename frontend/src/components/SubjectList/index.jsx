@@ -8,10 +8,12 @@ export default function SubjectList() {
 
     const [items, setItems] = useState([]);
 
+    const rol = localStorage.getItem('rol');
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/subject/professor`,{
+                const response = await axios.get(`http://localhost:3001/subject/${rol}`,{
                     headers: {
                       'Authorization': `Bearer ${token}`
                     }
@@ -23,7 +25,7 @@ export default function SubjectList() {
         };
 
         fetchData();
-    }, []);
+    }, );
 
     return (
         <div className="container">

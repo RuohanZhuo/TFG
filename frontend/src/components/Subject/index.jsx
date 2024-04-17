@@ -1,12 +1,23 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
 
-export default class index extends Component {
+export default class SubjectItem extends Component {
     render() {
+        const { acronym, subjectName, _id } = this.props;
+        const rol = localStorage.getItem('rol');
+        
         return (
-            <div style={{ margin: '10px', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', textAlign: 'center' }}>
-                <img src={`https://via.placeholder.com/150x150?text=${this.props.acronym}`} alt={this.props.subjectName} />
-                <h3>{this.props.subjectName}</h3>
-            </div>
+            <Card style={{ width: '200px', margin: '10px' }}>
+                <NavLink to={`/subject/${rol}/${_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Card.Img variant="top" src={`https://via.placeholder.com/150x150?text=${acronym}`} alt={subjectName} />
+                </NavLink>
+                <Card.Body>
+                    <NavLink to={`/subject/${rol}/${_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Card.Title>{subjectName}</Card.Title>
+                    </NavLink>
+                </Card.Body>
+            </Card>
         );
     }
 }

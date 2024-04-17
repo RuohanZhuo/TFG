@@ -23,7 +23,7 @@ export default function ClassroomList() {
     };
 
     fetchData();
-  }, []);
+  });
 
   return (
     <div className="container">

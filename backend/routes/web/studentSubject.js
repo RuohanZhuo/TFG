@@ -9,9 +9,11 @@ const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 
 router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     try {
+
         const { student, subject } = req.body;
 
         const studentId = await UserModel.findOne({ _id: student, rol: 'student' });
+
         if (!studentId) {
             return res.json({
                 code: '5001',
@@ -79,7 +81,7 @@ router.get('/subject/student', checkTokenMiddleware, async (req, res) => {
             return res.json({
                 code: '5006',
                 msg: 'No Subjects found for this student',
-                data: null
+                data: studentSubjects
             });
         }
     } catch (err) {
