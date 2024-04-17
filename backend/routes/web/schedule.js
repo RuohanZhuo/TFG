@@ -25,6 +25,12 @@ function changeDate(date) {
     return newDate;
 }
 
+function isSameDayUTC(date1, date2) {
+    return date1.getUTCFullYear() === date2.getUTCFullYear() &&
+        date1.getUTCMonth() === date2.getUTCMonth() &&
+        date1.getUTCDate() === date2.getUTCDate();
+}
+
 router.post('/schedule', checkTokenMiddleware, async (req, res) => {
     try {
         const { student, subject, startTime, endTime, classroom } = req.body;
@@ -32,8 +38,8 @@ router.post('/schedule', checkTokenMiddleware, async (req, res) => {
         const endDate = new Date(endTime)
         resetDateToZero(endDate);
         resetDateToZero(startDate);
-
-        if (startDate.toDateString() !== endDate.toDateString()) {
+        
+        if (!isSameDayUTC(startDate, endDate)) {
             return res.json({
                 code: '7007',
                 msg: 'Start time and end time are not on the same day',
@@ -101,10 +107,12 @@ router.post('/schedule', checkTokenMiddleware, async (req, res) => {
             student, startTime: startDate,
             endTime: endDate, subject, classroom
         });
+
+        const scheduleData = await ScheduleModel.findById(schedule._id).select('-expireAt');
         res.json({
             code: '0000',
             msg: 'Timetable created successfully',
-            data: schedule
+            data: scheduleData
         });
 
     } catch (err) {

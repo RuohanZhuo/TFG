@@ -26,11 +26,19 @@ module.exports = async (req, res, next) => {
   jwt.verify(token, secret, (err, data) => {
 
     if (err) {
-      return res.json({
-        code: '1009',
-        msg: 'Token verification failed',
-        data: null
-      })
+      if (err.name === 'TokenExpiredError') {
+        return res.json({
+          code: '1011',
+          msg: 'Token expired',
+          data: null
+        })
+      } else {
+        return res.json({
+          code: '1009',
+          msg: 'Token verification failed',
+          data: null
+        })
+      }
     }
 
     req.user = data;
