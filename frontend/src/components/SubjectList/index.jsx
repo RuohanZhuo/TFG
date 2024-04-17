@@ -5,14 +5,13 @@ import Subject from '../Subject';
 export default function SubjectList() {
 
     const token = localStorage.getItem('token');
-    const _id = localStorage.getItem('_id')
 
     const [items, setItems] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/subject/professor/${_id}`,{
+                const response = await axios.get(`http://localhost:3001/subject/professor`,{
                     headers: {
                       'Authorization': `Bearer ${token}`
                     }

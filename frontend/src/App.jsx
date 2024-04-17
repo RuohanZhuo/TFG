@@ -13,25 +13,28 @@ import SubjectPage from './pages/SubjectPage/SubjectPage'
 export default class App extends Component {
 
   state = {
-    isLoggedIn: false
+    authToken: localStorage.getItem('token') 
   }
 
-  handleLogin = () => {
-    this.setState({ isLoggedIn: true });
+  handleLogin = (token) => {
+    this.setState({ authToken: token });
+    localStorage.setItem('token', token);
   }
 
   handleLogout = () => {
-    this.setState({ isLoggedIn: false });
+    this.setState({ authToken: null });
+    localStorage.removeItem('token');
   }
+
 
   render() {
 
-    const { isLoggedIn } = this.state;
+    const { authToken } = this.state;
 
     return (
       <div>
         <div>
-          {isLoggedIn ? <UserHeader onLogout={this.handleLogout} /> : <Header />}
+          {authToken ? <UserHeader onLogout={this.handleLogout} /> : <Header />}
         </div>
         <div>
           <Routes>
