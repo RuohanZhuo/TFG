@@ -108,11 +108,10 @@ router.post('/schedule', checkTokenMiddleware, async (req, res) => {
             endTime: endDate, subject, classroom
         });
 
-        const scheduleData = await ScheduleModel.findById(schedule._id).select('-expireAt');
         res.json({
             code: '0000',
             msg: 'Timetable created successfully',
-            data: scheduleData
+            data: schedule
         });
 
     } catch (err) {
