@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, ListGroup, Row, Col, Form, Container } from 'react-bootstrap';
 import axios from 'axios';
+import Student from '../Student'
 import './index.css';
 
 export default class StudentsList extends Component {
@@ -54,6 +55,7 @@ export default class StudentsList extends Component {
       .then(response => {
         if(response.data.code==='0000'){
             alert('sucess');
+            window.location.reload();
         }else {
             alert('failed')
         }
@@ -77,7 +79,7 @@ export default class StudentsList extends Component {
       <Container style={{ maxWidth: '400px' }}>
         <Row className="justify-content-center">
           <Col>
-            <h2>Lista de Alumnos</h2>
+            <h3>Student List</h3>
             <Form.Group>
               <Form.Control
                 type="text"
@@ -93,8 +95,7 @@ export default class StudentsList extends Component {
                     <Row>
                       <Col sm={12}>
                         <div className="text-center">
-                          <div>{student.username}</div>
-                          <small>Email: {student.email}</small>
+                            <Student {...student} />
                         </div>
                       </Col>
                     </Row>
@@ -104,7 +105,7 @@ export default class StudentsList extends Component {
             </div>
             <div className="mt-3 d-flex justify-content-center">
               <Button variant="success" onClick={this.handleSendStudent} disabled={!selectedStudent}>
-                Matricular
+                Enroll
               </Button>
             </div>
           </Col>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import EnrollForm from '../EnrollForm'
 import EnrolledList from '../EnrolledList'
+import Timetable from '../Timetable'
 
 export default class SubjectDetail extends Component {
   state = {
@@ -19,7 +20,6 @@ export default class SubjectDetail extends Component {
           Authorization: `Bearer ${token}`
         }
       });
-
       this.setState({ subjectInfo: response.data.data, loading: false }); 
     } catch (error) {
       console.error('Error fetching subject info:', error);
@@ -29,7 +29,6 @@ export default class SubjectDetail extends Component {
 
   render() {
     const { subjectInfo, loading } = this.state;
-
     if (loading) {
       return (
         <div className="text-center mt-5">
@@ -53,6 +52,20 @@ export default class SubjectDetail extends Component {
           <Container className="bg-white rounded p-4 mt-3 shadow-lg">
             <Row>
               <Col>
+                <h3>Description</h3>
+              </Col>
+            </Row>
+          </Container>
+          <Container className="bg-white rounded p-4 mt-3 shadow-lg">
+            <Row>
+              <Col>
+                <Timetable subject={subjectInfo}/>
+              </Col>
+            </Row>
+          </Container>
+          <Container className="bg-white rounded p-4 mt-3 shadow-lg">
+            <Row>
+              <Col>
                 <EnrollForm subject={subjectInfo} />
               </Col>
             </Row>
@@ -60,7 +73,7 @@ export default class SubjectDetail extends Component {
           <Container className="bg-white rounded p-4 mt-3 shadow-lg">
             <Row>
               <Col>
-                <EnrolledList />
+                <EnrolledList subject={subjectInfo} />
               </Col>
             </Row>
           </Container>

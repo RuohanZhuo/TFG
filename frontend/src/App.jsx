@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import axios from 'axios';
 import SignUp from './pages/SignUp/SignUp'
 import Login from './pages/Login/Login'
 import Header from './components/Header'
@@ -17,31 +18,57 @@ export default class App extends Component {
 
   state = {
     authToken: localStorage.getItem('token'),
+    isAuthenticated: false, 
+  };
+
+  async componentDidMount() {
+    const { authToken } = this.state;
+    if (authToken) {
+      try {
+        const response = await axios.get('http://localhost:3001/subject', {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        })
+        if(response.data.code==="0000"){
+          this.setState({ isAuthenticated: true });
+        }else{
+          this.handleLogout(); 
+        }
+      } catch (error) {
+        console.error('Error verifying token:', error);
+      }
+    }
   }
 
   handleLogin = (data) => {
-    this.setState({ authToken: data.token});
+    this.setState({ authToken: data.token, isAuthenticated: true });
     localStorage.setItem('token', data.token);
     localStorage.setItem('username', data.username);
     localStorage.setItem('rol', data.rol);
   }
 
   handleLogout = () => {
-    this.setState({ authToken: null });
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('rol');
+    this.setState({ authToken: null, isAuthenticated: false });
+    localStorage.clear()
+  }
+
+  handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
   }
 
 
   render() {
 
-    const { authToken } = this.state;
+    const { isAuthenticated } = this.state;
 
     return (
       <div>
         <div>
-          {authToken ? <UserHeader onLogout={this.handleLogout} /> : <Header />}
+          {isAuthenticated ? <UserHeader onLogout={this.handleLogout} /> : <Header />}
         </div>
         <div>
           <Routes>
