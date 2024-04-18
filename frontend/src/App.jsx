@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import axios from 'axios';
+import './App.css';
 import SignUp from './pages/SignUp/SignUp'
 import Login from './pages/Login/Login'
 import Header from './components/Header'
@@ -66,13 +67,19 @@ export default class App extends Component {
     const { isAuthenticated } = this.state;
 
     return (
-      <div>
+      <div className="background-image">
         <div>
           {isAuthenticated ? <UserHeader onLogout={this.handleLogout} /> : <Header />}
         </div>
         <div>
           <Routes>
-            <Route path="/" element={<div>This is Home page</div>} />
+            <Route path="/" element={
+              <div className="d-flex justify-content-center align-items-center min-vh-100">
+                <div className="welcome text-center display-1">
+                  <h1 className="display-1">Bienvenido a Reserva UPM</h1>
+                </div>
+              </div>
+            } />
             <Route path="/sign" element={<SignUp />} />
             <Route path="/login" element={<Login onLogin={this.handleLogin} />} />
             <Route path="/classroom" element={<ClassroomPage />} />

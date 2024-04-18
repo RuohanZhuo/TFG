@@ -32,7 +32,7 @@ router.post('/timetable', checkTokenMiddleware, checkIsProfessorMiddleware, asyn
             });
         }
 
-        if (startHour < 9 || startHour > 20 || endHour < 10 || endHour > 21) {
+        if (startHour < 9 || startHour > 20 || endHour < 10 || endHour >= 21) {
             return res.json({
                 code: '6004',
                 msg: 'Class hours are from 9 am to 9 pm',

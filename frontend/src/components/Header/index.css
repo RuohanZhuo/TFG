@@ -26,3 +26,10 @@
 .login-nav:hover {
   background-color: #555;
 }
+
+.navbar-logo {
+  max-width: 50px; 
+  height: auto; 
+}
+
+

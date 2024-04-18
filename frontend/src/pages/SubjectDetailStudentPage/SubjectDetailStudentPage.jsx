@@ -1,9 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import SubjectStudentDetail from '../../components/SubjectStudentDetail';
 
-export default class SubjectDetailStudentPage extends Component {
-  render() {
-    return (
-      <div>SubjectDetailStudentPage</div>
-    )
-  }
+export default function SubjectDetailStudentPage() {
+  const { id } = useParams();
+  return (
+    <div>
+      <SubjectStudentDetail id={id}/>
+    </div>
+  );
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import './index.css'
 
 export default class TimetableForm extends Component {
   state = {
@@ -51,7 +52,7 @@ export default class TimetableForm extends Component {
     const startMinute = startTime.split(':')[1];
     const endHour = endTime.split(':')[0];
     const endMinute = endTime.split(':')[1];
-  
+
     try {
       this.setState({ loading: true });
       const response = await axios.post('http://localhost:3001/timetable', {
@@ -88,33 +89,37 @@ export default class TimetableForm extends Component {
     const { dayOfWeek, startTime, endTime, classroomOptions, selectedClassroom, loading } = this.state;
 
     return (
-      <div>
-        <h3>Timetable Form</h3>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Day of Week:
-            <input type="number" name="dayOfWeek" value={dayOfWeek} onChange={this.handleChange} required />
-          </label>
-          <label>
-            Start Time:
-            <input type="time" name="startTime" value={startTime} onChange={this.handleChange} required />
-          </label>
-          <label>
-            End Time:
-            <input type="time" name="endTime" value={endTime} onChange={this.handleChange} required />
-          </label>
-          <label>
-            Classroom:
-            <select name="selectedClassroom" value={selectedClassroom ? selectedClassroom._id : ''} onChange={this.handleClassroomChange} required>
+      <div className='timetableForm shadow p-3 rounded'>
+        <h3 className="mb-4">Timetable Form</h3>
+        <form onSubmit={this.handleSubmit} className="row g-3 align-items-center">
+          <div className="col-md-3">
+            <label htmlFor="dayOfWeek" className="form-label">Day of Week:</label>
+            <input type="number" id="dayOfWeek" name="dayOfWeek" value={dayOfWeek} onChange={this.handleChange} min={1} max={7} className="form-control" required />
+          </div>
+          <div className="col-md-3">
+            <label htmlFor="startTime" className="form-label">Start Time:</label>
+            <input type="time" id="startTime" name="startTime" value={startTime} onChange={this.handleChange} className="form-control" required />
+          </div>
+          <div className="col-md-3">
+            <label htmlFor="endTime" className="form-label">End Time:</label>
+            <input type="time" id="endTime" name="endTime" value={endTime} onChange={this.handleChange} className="form-control" required />
+          </div>
+          <div className="col-md-3">
+            <label htmlFor="selectedClassroom" className="form-label">Classroom:</label>
+            <select id="selectedClassroom" name="selectedClassroom" value={selectedClassroom ? selectedClassroom._id : ''} onChange={this.handleClassroomChange} className="form-select" style={{ height: '38px' }} required>
               <option value="">Select a Classroom</option>
               {classroomOptions.map(classroom => (
                 <option key={classroom._id} value={classroom._id}>{classroom.classroomName}</option>
               ))}
             </select>
-          </label>
-          <button type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Submit'}</button>
+          </div>
+          <div className="col-md-12">
+            <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Submitting...' : 'Submit'}</button>
+          </div>
         </form>
       </div>
     );
+    
+    
   }
 }

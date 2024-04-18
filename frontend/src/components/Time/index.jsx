@@ -6,7 +6,12 @@ export default class index extends Component {
 
     const startDate = new Date(startTime);
     const endDate = new Date(endTime);
-
+    
+    const timezoneOffset = startDate.getTimezoneOffset() - new Date().getTimezoneOffset();
+    
+    startDate.setMinutes(startDate.getMinutes() - timezoneOffset);
+    endDate.setMinutes(endDate.getMinutes() - timezoneOffset);
+    
     const startHour = startDate.getHours();
     const startMinute = startDate.getMinutes();
     const endHour = endDate.getHours();
