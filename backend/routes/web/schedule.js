@@ -137,4 +137,29 @@ router.post('/schedule', checkTokenMiddleware, async (req, res) => {
     }
 });
 
+router.get('/schedule', checkTokenMiddleware, async (req, res) => {
+    try {
+        const schedule = await ScheduleModel.find({student : req.user._id});
+        if (!schedule) {
+            return res.json({
+                code: '7009',
+                msg: 'Schedule not found',
+                data: null
+            });
+        }
+        res.json({
+            code: '0000',
+            msg: 'Successfully retrieved the schedule',
+            data: schedule
+        });
+    } catch (err) {
+        console.log(err)
+        res.json({
+            code: '7010',
+            msg: 'Error while fetching the schedule',
+            data: null
+        });
+    }
+});
+
 module.exports = router;

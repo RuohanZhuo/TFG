@@ -32,7 +32,8 @@ router.post('/timetable', checkTokenMiddleware, checkIsProfessorMiddleware, asyn
             });
         }
 
-        if (startHour < 9 || startHour > 20 || endHour < 10 || endHour >= 21) {
+        if (startHour < 9 || startHour > 20 || endHour < 10 || 
+            (endHour == 21 && endMinute > 0) || endHour > 21) {
             return res.json({
                 code: '6004',
                 msg: 'Class hours are from 9 am to 9 pm',
@@ -107,6 +108,29 @@ router.get('/timetable/subject/:id', checkTokenMiddleware, async (req, res) => {
         console.error(err);
         res.json({
             code: '6007',
+            msg: 'Error while fetching the timetable',
+            data: null
+        });
+    }
+});
+
+router.get('/timetable/classroom/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
+    try {
+        const classroomId = req.params.id;
+
+        const timetable = await TimetableModel.find({classroom: classroomId})
+            .populate('subject')
+            .populate('classroom');
+
+        res.json({
+            code: '0000',
+            msg: 'Timetable retrieved successfully',
+            data: timetable
+        });
+    } catch (err) {
+        console.error(err);
+        res.json({
+            code: '6008',
             msg: 'Error while fetching the timetable',
             data: null
         });
