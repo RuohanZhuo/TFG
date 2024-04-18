@@ -33,9 +33,14 @@ function isSameDayUTC(date1, date2) {
 
 router.post('/schedule', checkTokenMiddleware, async (req, res) => {
     try {
-        const { student, subject, startTime, endTime, classroom } = req.body;
+        const { subject, startTime, endTime, classroom } = req.body;
+        const student = req.user._id;
         const startDate = new Date(startTime)
         const endDate = new Date(endTime)
+        const now = new Date();
+        const timezoneOffset = now.getTimezoneOffset() * 60000;
+        const localDate = new Date(now.getTime() - timezoneOffset);
+
         resetDateToZero(endDate);
         resetDateToZero(startDate);
         
@@ -43,6 +48,14 @@ router.post('/schedule', checkTokenMiddleware, async (req, res) => {
             return res.json({
                 code: '7007',
                 msg: 'Start time and end time are not on the same day',
+                data: null
+            });
+        }
+
+        if (startDate.getTime() < localDate.getTime() + 30 * 60 * 1000) {
+            return res.json({
+                code: '7008',
+                msg: 'Start time must be at least 30 minutes later than the current time',
                 data: null
             });
         }
