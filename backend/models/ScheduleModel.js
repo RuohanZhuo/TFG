@@ -13,14 +13,6 @@ const ScheduleSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    expireAt: {
-        type: Date,
-        default: function() {
-            const nextDay = new Date(this.endTime);
-            return nextDay;
-        },
-        index: { expires: '0s' }
-    },
     subject: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'subjects',
@@ -32,6 +24,8 @@ const ScheduleSchema = new mongoose.Schema({
         required: true
     }
 });
+
+ScheduleSchema.index({ "endTime": 1 }, { expireAfterSeconds: 0 });
 
 const ScheduleModel = mongoose.model('schedules', ScheduleSchema);
 
