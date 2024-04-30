@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const ClassroomModel = require('../../models/ClassroomModel');
+const ScheduleModel = require('../../models/ScheduleModel');
+const TimetableModel = require('../../models/TimetableModel');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
@@ -87,6 +89,10 @@ router.delete('/classroom/:id', checkTokenMiddleware, checkIsProfessorMiddleware
         data: null
       });
     }
+
+    await ScheduleModel.deleteMany({classroom: req.params.id});
+    await TimetableModel.deleteMany({classroom: req.params.id});
+
     res.json({
       code: '0000',
       msg: 'Classroom deleted successfully',

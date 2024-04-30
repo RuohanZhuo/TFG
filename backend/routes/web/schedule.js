@@ -103,7 +103,7 @@ router.post('/schedule', checkTokenMiddleware, async (req, res) => {
         const newStartTime = changeDate(startTime);
         const newEndTime = changeDate(endTime);
 
-        const timetableInfo = await TimetableModel.countDocuments({
+        const timetableInfo = await TimetableModel.findOne({
             dayOfWeek, subject, startTime: newStartTime,
             endTime: newEndTime, classroom
         });
@@ -118,12 +118,12 @@ router.post('/schedule', checkTokenMiddleware, async (req, res) => {
 
         const schedule = await ScheduleModel.create({
             student, startTime: startDate,
-            endTime: endDate, subject, classroom
+            endTime: endDate, subject, classroom, timetable:timetableInfo._id
         });
 
         res.json({
             code: '0000',
-            msg: 'Timetable created successfully',
+            msg: 'Schedule created successfully',
             data: schedule
         });
 
@@ -157,6 +157,32 @@ router.get('/schedule', checkTokenMiddleware, async (req, res) => {
         res.json({
             code: '7010',
             msg: 'Error while fetching the schedule',
+            data: null
+        });
+    }
+});
+
+router.delete('/schedule/:id', checkTokenMiddleware, async (req, res) => {
+    try {
+
+        const schedule = await ScheduleModel.deleteOne({_id: req.params.id, student:req.user._id});
+        if (schedule.deletedCount === 0) {
+            return res.json({
+                code: '7011',
+                msg: 'Schedule not found',
+                data: null
+            });
+        }
+        res.json({
+            code: '0000',
+            msg: 'Schedule deleted successfully',
+            data: null
+        });
+    } catch (err) {
+        console.log(err);
+        res.json({
+            code: '7012',
+            msg: 'Error while deleting the schedule',
             data: null
         });
     }

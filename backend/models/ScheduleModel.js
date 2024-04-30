@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 
 const ScheduleSchema = new mongoose.Schema({
     student: {
-        type: String,
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
     },
     startTime: {
         type: Date,
@@ -21,6 +22,11 @@ const ScheduleSchema = new mongoose.Schema({
     classroom: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'classrooms',
+        required: true
+    },
+    timetable: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'timetables',
         required: true
     }
 });

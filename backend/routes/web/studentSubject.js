@@ -3,6 +3,7 @@ var router = express.Router();
 const UserModel = require('../../models/UserModel');
 const SubjectModel = require('../../models/SubjectModel');
 const StudentSubjectModel = require('../../models/StudentSubjectModel');
+const ScheduleModel = require('../../models/ScheduleModel');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
@@ -91,6 +92,36 @@ router.get('/subject/student', checkTokenMiddleware, async (req, res) => {
             msg: 'Error while fetching the subject',
             data: null
         });
+    }
+});
+
+router.delete('/studentSubject/:id', checkTokenMiddleware, async (req, res) => {
+    try {
+      const studentSubject = await StudentSubjectModel.findOne({_id: req.params.id, student: req.user._id});
+      if (!studentSubject) {
+        return res.json({
+          code: '5008',
+          msg: 'The student is not enrolled in this subject',
+          data: null
+        });
+      }
+
+      await StudentSubjectModel.deleteOne({_id: req.params.id});
+
+      await ScheduleModel.deleteMany({subject: studentSubject.subject, student: req.user._id});
+
+      res.json({
+        code: '0000',
+        msg: 'deleted successfully',
+        data: studentSubject
+      });
+    } catch (err) {
+      console.log(err)
+      res.json({
+        code: '5009',
+        msg: 'Error while deleting',
+        data: null
+      });
     }
 });
 

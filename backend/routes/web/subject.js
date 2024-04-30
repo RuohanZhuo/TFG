@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+const TimetableModel = require('../../models/TimetableModel');
+const ScheduleModel = require('../../models/ScheduleModel');
+const StudentSubjectModel = require('../../models/StudentSubjectModel');
 const SubjectModel = require('../../models/SubjectModel');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
@@ -109,14 +112,23 @@ router.get('/subject/:id', checkTokenMiddleware, async (req, res) => {
 
 router.delete('/subject/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     try {
-      const subject = await SubjectModel.findByIdAndDelete(req.params.id);
+      const subject = await SubjectModel.findOne({_id: req.params.id, professor: req.user._id});
       if (!subject) {
         return res.json({
           code: '4005',
-          msg: 'Subject not found',
+          msg: 'Subject not found or not authorized to delete',
           data: null
         });
       }
+
+      await SubjectModel.deleteOne({_id: req.params.id});
+
+      await ScheduleModel.deleteMany({subject: req.params.id});
+
+      await StudentSubjectModel.deleteMany({subject: req.params.id});
+
+      await TimetableModel.deleteMany({subject: req.params.id});
+
       res.json({
         code: '0000',
         msg: 'Subject deleted successfully',
@@ -131,7 +143,5 @@ router.delete('/subject/:id', checkTokenMiddleware, checkIsProfessorMiddleware, 
       });
     }
 });
-
-
 
 module.exports = router;

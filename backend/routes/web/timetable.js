@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const TimetableModel = require('../../models/TimetableModel');
+const SubjectModel = require('../../models/SubjectModel');
+const ScheduleModel = require('../../models/ScheduleModel');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
@@ -13,6 +15,15 @@ function resetDateToZero(date) {
 router.post('/timetable', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     try {
         const {dayOfWeek, startHour, startMinute, endHour, endMinute, subject, classroom} = req.body;
+
+        const subjects = await SubjectModel.find({professor: req.user._id, _id:subject});
+        if(subjects.length === 0){
+            return res.json({
+                code: '6009',
+                msg: 'The subject does not exist or this subject does not belong to this teacher',
+                data: null
+            });
+        }
 
         if (startHour < 0 || startHour >= 24 || startMinute < 0 || startMinute >= 60 ||
             endHour < 0 || endHour >= 24 || endMinute < 0 || endMinute >= 60) {
@@ -132,6 +143,35 @@ router.get('/timetable/classroom/:id', checkTokenMiddleware, checkIsProfessorMid
         res.json({
             code: '6008',
             msg: 'Error while fetching the timetable',
+            data: null
+        });
+    }
+});
+
+router.delete('/timetable/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
+    try {
+
+        const timetable = await TimetableModel.deleteOne({_id: req.params.id});
+        if (timetable.deletedCount === 0) {
+            return res.json({
+                code: '6010',
+                msg: 'Timetable not found',
+                data: null
+            });
+        }
+
+        await ScheduleModel.deleteMany({timetable: req.params.id});
+
+        res.json({
+            code: '0000',
+            msg: 'Timetable and related schedules deleted successfully',
+            data: null
+        });
+    } catch (err) {
+        console.log(err);
+        res.json({
+            code: '6011',
+            msg: 'Error while deleting the schedule',
             data: null
         });
     }
