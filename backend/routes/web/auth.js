@@ -11,12 +11,19 @@ const bcrypt = require('bcrypt');
 router.post('/reg', async (req, res) => {
   const userInfo = req.body;
   let rol;
-  const {password, confirmPassword ,email } = userInfo;
+  const {password, confirmPassword ,email ,admin} = userInfo;
 
   if(email.endsWith('@alumnos.upm.es')){
     rol = "student";
   }else if(email.endsWith('@upm.es')){
-    rol = "professor"
+    console.log(admin)
+    if(admin && admin == "true") {
+      rol = "admin"
+    }
+    else {
+      rol = "professor"
+    }
+
   }else{
     return res.json({
       code: '1001',

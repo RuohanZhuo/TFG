@@ -6,6 +6,7 @@ const StudentSubjectModel = require('../../models/StudentSubjectModel');
 const SubjectModel = require('../../models/SubjectModel');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
+const checkIsNotAdminMiddleware = require('../../middlewares/checkIsNotAdminMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 
 router.post('/subject', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
@@ -67,7 +68,7 @@ router.get('/subject/professor', checkTokenMiddleware, checkIsProfessorMiddlewar
   }
 });
 
-router.get('/subject', checkTokenMiddleware, async (req, res) => {
+router.get('/subject', checkTokenMiddleware, checkIsNotAdminMiddleware, async (req, res) => {
     try {
         const subjects = await SubjectModel.find({});
         res.json({
@@ -85,7 +86,7 @@ router.get('/subject', checkTokenMiddleware, async (req, res) => {
     }
 });
 
-router.get('/subject/:id', checkTokenMiddleware, async (req, res) => {
+router.get('/subject/:id', checkTokenMiddleware, checkIsNotAdminMiddleware, async (req, res) => {
     try {
         const subject = await SubjectModel.findById(req.params.id);
         if (!subject) {

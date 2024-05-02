@@ -5,6 +5,8 @@ const SubjectModel = require('../../models/SubjectModel');
 const ScheduleModel = require('../../models/ScheduleModel');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
+const checkIsNotStudentMiddleware = require('../../middlewares/checkIsNotStudentMiddleware');
+const checkIsNotAdminMiddleware = require('../../middlewares/checkIsNotAdminMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 
 function resetDateToZero(date) {
@@ -102,13 +104,21 @@ router.post('/timetable', checkTokenMiddleware, checkIsProfessorMiddleware, asyn
     }
 });
 
-router.get('/timetable/subject/:id', checkTokenMiddleware, async (req, res) => {
+router.get('/timetable/subject/:id', checkTokenMiddleware, checkIsNotAdminMiddleware, async (req, res) => {
     try {
         const subjectId = req.params.id;
 
         const timetable = await TimetableModel.find({subject: subjectId})
             .populate('subject')
             .populate('classroom');
+
+        if(timetable.length == 0){
+            return res.json({
+                code: '6012',
+                msg: 'Timetable not found',
+                data: null
+            });
+        }
 
         res.json({
             code: '0000',
@@ -125,13 +135,21 @@ router.get('/timetable/subject/:id', checkTokenMiddleware, async (req, res) => {
     }
 });
 
-router.get('/timetable/classroom/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
+router.get('/timetable/classroom/:id', checkTokenMiddleware, checkIsNotStudentMiddleware, async (req, res) => {
     try {
         const classroomId = req.params.id;
 
-        const timetable = await TimetableModel.find({classroom: classroomId})
+        const timetable = await TimetableModel.find({ classroom: classroomId })
             .populate('subject')
             .populate('classroom');
+
+        if (timetable.length == 0) {
+            return res.json({
+                code: '6013',
+                msg: 'Timetable not found',
+                data: null
+            });
+        }
 
         res.json({
             code: '0000',

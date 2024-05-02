@@ -5,7 +5,7 @@ const ScheduleModel = require('../../models/ScheduleModel');
 const ClassroomModel = require('../../models/ClassroomModel');
 const TimetableModel = require('../../models/TimetableModel');
 
-const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
+const checkIsStudentMiddleware = require('../../middlewares/checkIsStudentMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 
 function resetDateToZero(date) {
@@ -31,7 +31,7 @@ function isSameDayUTC(date1, date2) {
         date1.getUTCDate() === date2.getUTCDate();
 }
 
-router.post('/schedule', checkTokenMiddleware, async (req, res) => {
+router.post('/schedule', checkTokenMiddleware, checkIsStudentMiddleware, async (req, res) => {
     try {
         const { subject, startTime, endTime, classroom } = req.body;
         const student = req.user._id;
@@ -137,7 +137,7 @@ router.post('/schedule', checkTokenMiddleware, async (req, res) => {
     }
 });
 
-router.get('/schedule', checkTokenMiddleware, async (req, res) => {
+router.get('/schedule', checkTokenMiddleware, checkIsStudentMiddleware, async (req, res) => {
     try {
         const schedule = await ScheduleModel.find({student : req.user._id});
         if (!schedule) {
@@ -162,7 +162,7 @@ router.get('/schedule', checkTokenMiddleware, async (req, res) => {
     }
 });
 
-router.delete('/schedule/:id', checkTokenMiddleware, async (req, res) => {
+router.delete('/schedule/:id', checkTokenMiddleware, checkIsStudentMiddleware, async (req, res) => {
     try {
 
         const schedule = await ScheduleModel.deleteOne({_id: req.params.id, student:req.user._id});

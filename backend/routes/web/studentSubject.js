@@ -6,6 +6,7 @@ const StudentSubjectModel = require('../../models/StudentSubjectModel');
 const ScheduleModel = require('../../models/ScheduleModel');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
+const checkIsStudentMiddleware = require('../../middlewares/checkIsStudentMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 
 router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
@@ -66,7 +67,7 @@ router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware,
     }
 });
 
-router.get('/subject/student', checkTokenMiddleware, async (req, res) => {
+router.get('/subject/student', checkTokenMiddleware, checkIsStudentMiddleware, async (req, res) => {
     try {
         const studentId = req.user._id;
 
@@ -95,9 +96,9 @@ router.get('/subject/student', checkTokenMiddleware, async (req, res) => {
     }
 });
 
-router.delete('/studentSubject/:id', checkTokenMiddleware, async (req, res) => {
+router.delete('/studentSubject/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     try {
-      const studentSubject = await StudentSubjectModel.findOne({_id: req.params.id, student: req.user._id});
+      const studentSubject = await StudentSubjectModel.findOne({_id: req.params.id});
       if (!studentSubject) {
         return res.json({
           code: '5008',
@@ -106,9 +107,18 @@ router.delete('/studentSubject/:id', checkTokenMiddleware, async (req, res) => {
         });
       }
 
+      const subject = await SubjectModel.findById(studentSubject.subject);
+      if(subject.professor != req.user._id){
+        return res.json({
+            code: '5010',
+            msg: 'No permission, this course does not belong to this professor',
+            data: null
+        });
+      }
+
       await StudentSubjectModel.deleteOne({_id: req.params.id});
 
-      await ScheduleModel.deleteMany({subject: studentSubject.subject, student: req.user._id});
+      await ScheduleModel.deleteMany({subject:studentSubject.subject, student:studentSubject.student});
 
       res.json({
         code: '0000',

@@ -5,6 +5,7 @@ const ScheduleModel = require('../../models/ScheduleModel');
 const TimetableModel = require('../../models/TimetableModel');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
+const checkIsNotStudentMiddleware = require('../../middlewares/checkIsNotStudentMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 
 router.post('/classroom', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
@@ -36,7 +37,7 @@ router.post('/classroom', checkTokenMiddleware, checkIsProfessorMiddleware, asyn
   }
 });
 
-router.get('/classroom', checkTokenMiddleware, checkIsProfessorMiddleware,async (req, res) => {
+router.get('/classroom', checkTokenMiddleware, checkIsNotStudentMiddleware,async (req, res) => {
   try {
     const classrooms = await ClassroomModel.find({});
     res.json({
@@ -54,7 +55,7 @@ router.get('/classroom', checkTokenMiddleware, checkIsProfessorMiddleware,async 
   }
 });
 
-router.get('/classroom/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
+router.get('/classroom/:id', checkTokenMiddleware, checkIsNotStudentMiddleware, async (req, res) => {
   try {
     const classroom = await ClassroomModel.findById(req.params.id);
     if (!classroom) {
