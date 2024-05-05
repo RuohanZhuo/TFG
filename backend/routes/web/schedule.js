@@ -144,7 +144,7 @@ router.get('/schedule', checkTokenMiddleware, checkIsStudentMiddleware, async (r
             return res.json({
                 code: '7009',
                 msg: 'Schedule not found',
-                data: null
+                data: schedule
             });
         }
         res.json({

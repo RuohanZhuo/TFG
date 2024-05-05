@@ -24,11 +24,19 @@ router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware,
             });
         }
 
-        const subjectId = await SubjectModel.findById(subject);
+        const subjectId = await SubjectModel.findOne({_id:subject});
         if (!subjectId) {
             return res.json({
                 code: '5002',
                 msg: 'Subject not exist',
+                data: null
+            });
+        }
+
+        if(req.user._id != subjectId.professor){
+            return res.json({
+                code: '5011',
+                msg: 'The subject is not belong to this professor',
                 data: null
             });
         }

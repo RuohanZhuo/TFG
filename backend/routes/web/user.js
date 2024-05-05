@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const UserModel = require('../../models/UserModel');
 const StudentSubjectModel = require('../../models/StudentSubjectModel');
+const bcrypt = require('bcrypt');
 
 const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
@@ -77,6 +78,39 @@ router.get('/student/:id', checkTokenMiddleware, checkIsProfessorMiddleware, asy
         res.json({
             code: '2003',
             msg: 'Error while fetching the student',
+            data: null
+        });
+    }
+});
+
+router.patch('/user/password', checkTokenMiddleware, async (req, res) => {
+    try {
+        const {oldPassword, newPassword} = req.body;
+
+        const user = await UserModel.findById(req.user._id);
+
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            return res.json({
+                code: '2006',
+                msg: 'Incorrect old password',
+                data: null
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await UserModel.updateOne({ _id: req.user._id }, { password: hashedPassword });
+
+        res.json({
+            code: '0000',
+            msg: 'Password updated successfully',
+            data: null
+        });
+    } catch (error) {
+        res.json({
+            code: '2007',
+            msg: 'Error while updating password',
             data: null
         });
     }
