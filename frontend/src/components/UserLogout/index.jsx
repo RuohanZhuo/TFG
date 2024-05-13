@@ -1,14 +1,19 @@
-import React from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom';
-import './index.css'
+import { Navbar, Nav, NavDropdown, Offcanvas} from 'react-bootstrap'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import HeaderProfessor from '../HeaderProfessor'
 import HeaderStudent from '../HeaderStudent'
+import logo from '../../img/logo.png'
+import menu from '../../img/menu.png'
+import './index.css'
 
 export default function Logout(props) {
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const [showLeftDropdown, setShowLeftDropdown] = useState(false)
+  const [showRightDropdown, setShowRightDropdown] = useState(false)
 
   const onSubmit = async (event) => {
     event.preventDefault()
@@ -16,51 +21,60 @@ export default function Logout(props) {
     const token = localStorage.getItem('token');
 
     try {
-
       const response = await axios.post('http://localhost:3001/logout', {}, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
-      const data =  response.data;
+      const data = response.data
 
       if (data.code === '0000') {
-        alert('logout exitoso');
-        console.log(data)
+        alert('logout exitoso')
         props.onLogout()
-        navigate('/');
-      }else{
+        navigate('/')
+      } else {
         console.log(data)
       }
 
     } catch (error) {
-      console.error('Error en el logout:', error);
+      console.error('Error en el logout:', error)
     }
-  }
+  };
 
   const rol = localStorage.getItem("rol")
+  const username = localStorage.getItem("username")
 
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-      <div className="container-fluid">
-        <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <NavLink className='home-nav' to='/'>Home</NavLink>
-            </li>
-            {rol === 'professor' ? <HeaderProfessor/> : <HeaderStudent/>}
-          </ul>
-          <ul className="navbar-nav ms-auto">
-            <li>
-              <form onSubmit={onSubmit}>
-                <button type="submit">logout</button>
-              </form>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <>       
+      <Navbar bg="dark" variant="dark" expand="lg" className="px-0">
+        <Navbar.Toggle aria-controls="navbarNavDropdown" />
+        <Navbar.Collapse id="navbarNavDropdown">
+          <Nav className="me-auto">
+            <Nav.Link onClick={() => setShowLeftDropdown(true)}>
+              <img src={menu} alt="Logo" className="logo" />
+            </Nav.Link>
+          </Nav>
+          <Nav>
+            <NavDropdown title={`Welcome "${username}" !`} id="nav-dropdown-right" className="menu-right" show={showRightDropdown} onToggle={() => setShowRightDropdown(!showRightDropdown)} align="end">
+              <NavDropdown.Item as={NavLink} to={`/profile/${username}`}>Profile</NavDropdown.Item>
+              <NavDropdown.Item onClick={onSubmit}>Logout</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+        <Navbar.Brand as={NavLink} to="/" className="me-auto"><img src={logo} alt="Logo" className="logo" /></Navbar.Brand>
+      </Navbar>
+      <Offcanvas show={showLeftDropdown} onHide={() => setShowLeftDropdown(false)} placement="start">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Menu</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Nav className="flex-column">
+            <Nav.Link as={NavLink} to="/" onClick={() => setShowLeftDropdown(false)}>Home</Nav.Link>
+            {rol === 'professor' ? <HeaderProfessor/> : <HeaderStudent />}
+          </Nav>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </>
   )
 }
-

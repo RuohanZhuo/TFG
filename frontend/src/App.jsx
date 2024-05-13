@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import axios from 'axios';
-import './App.css';
+import axios from 'axios'
+import './App.css'
 import SignUp from './pages/SignUp/SignUp'
 import Login from './pages/Login/Login'
 import Header from './components/Header'
@@ -13,7 +13,8 @@ import SubjectPage from './pages/SubjectPage/SubjectPage'
 import MySubjectPage from './pages/MySubjectPage/MySubjectPage'
 import SubjectDetailPage from './pages/SubjectDetailPage/SubjectDetailPage'
 import SubjectDetailStudentPage from './pages/SubjectDetailStudentPage/SubjectDetailStudentPage'
-
+import Profile from './pages/ProfilePage/ProfilePage'
+import Footer from './components/Footer'
 
 export default class App extends Component {
 
@@ -89,7 +90,11 @@ export default class App extends Component {
             <Route path="/mySubject" element={<MySubjectPage />} />
             <Route path="/subject/professor/:id" element={<SubjectDetailPage />} />
             <Route path="/subject/student/:id" element={<SubjectDetailStudentPage />} />
+            <Route path='/profile/:username' element={<Profile />} />
           </Routes>
+        </div>
+        <div>
+          <Footer/>
         </div>
       </div>
     )

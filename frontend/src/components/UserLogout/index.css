@@ -13,8 +13,7 @@
 }
 
 .sign-nav,
-.login-nav,
-.logout-nav {
+.login-nav {
   text-decoration: none;
   color: #fff;
   padding: 10px;
@@ -26,4 +25,29 @@
 .sign-nav:hover,
 .login-nav:hover {
   background-color: #555;
+}
+
+.logo {
+  max-width: 50px;
+  margin-right: 12px;
+  height: auto; 
+}
+
+.menu-right{
+  margin-right: 5px;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-block;
+}
+
+.logo {
+  width: 40px;
+  height: auto;
+  transition: transform 0.3s ease; 
+}
+
+.logo:hover {
+  transform: scale(1.1);
 }

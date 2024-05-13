@@ -1,18 +1,14 @@
 import React, { Component } from 'react'
+import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
-
 
 export default class index extends Component {
   render() {
     return (
-      <ul className="navbar-nav">
-        <li className="nav-item">
-            <NavLink className='home-nav' to='/classroom'>Classroom</NavLink>
-        </li>
-        <li className="nav-item">
-            <NavLink className='home-nav' to='/subject'>Subject</NavLink>
-        </li>
-      </ul>
-    )
+      <>
+        <Nav.Link as={NavLink} to='/classroom'>Classroom</Nav.Link>
+        <Nav.Link as={NavLink} to='/subject'>Subject</Nav.Link>
+      </>
+    );
   }
 }
