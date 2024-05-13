@@ -12,7 +12,21 @@ export default class SubjectItem extends Component {
             <div className="card-container d-flex align-items-center justify-content-center">
                 <Card className="mb-3" style={{ width: '300px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
                     <NavLink to={`/subject/${rol}/${_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Card.Img variant="top" src={`https://via.placeholder.com/150x150?text=${acronym}`} alt={subjectName} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
+                        <div
+                            className="placeholder-image"
+                            style={{
+                                width: '100%',
+                                height: '150px',
+                                backgroundColor: '#123456', 
+                                color: '#ffffff', 
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '24px', 
+                            }}
+                        >
+                            {acronym}
+                        </div>
                     </NavLink>
                     <Card.Body style={{ height: '100px' }}>
                         <NavLink to={`/subject/${rol}/${_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>

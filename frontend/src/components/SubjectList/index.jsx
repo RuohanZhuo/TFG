@@ -25,7 +25,7 @@ export default function SubjectList() {
         };
 
         fetchData();
-    }, );
+    },[rol,token]);
 
     return (
         <div className="container">
