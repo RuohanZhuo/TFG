@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const {secret} = require('../../config/config');
 const UserModel = require('../../models/UserModel');
 const TokenModel = require('../../models/TokenModel');
-// const checkLoginMiddleware = require('../../middlewares/checkLoginMiddleware');
 const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
 const bcrypt = require('bcrypt');
 
@@ -101,8 +100,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // req.session.username = user.username;
-    // req.session._id = user._id;
     const token = jwt.sign({
       username: user.username,
       _id: user._id
@@ -133,14 +130,6 @@ router.post('/login', async (req, res) => {
 router.post('/logout', checkTokenMiddleware, async (req, res) => {
 
   try {
-
-    // req.session.destroy(() => {
-    //   res.json({
-    //     code: '0000',
-    //     msg: 'Logout successful',
-    //     data: null
-    //   });
-    // });
 
     const authHeader = req.get('Authorization');
     const token = authHeader.substring(7);

@@ -9,8 +9,7 @@ let SubjectSchema = new mongoose.Schema({
     },
     acronym:{
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     capacity:{
         type: Number,
