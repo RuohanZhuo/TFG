@@ -30,7 +30,7 @@ export default class Index extends Component {
     const token = localStorage.getItem('token')
     try {
       const response = await axios.patch(
-        'http://localhost:3001/change-password',
+        'http://localhost:3001/user/password',
         {
           oldPassword,
           newPassword
@@ -41,7 +41,8 @@ export default class Index extends Component {
           }
         }
       )
-      alert(response.data.message);
+      alert(response.data.msg);
+      window.location.reload();
     } catch (error) {
       console.error('Error al cambiar la contraseña:', error)
       alert('Error al cambiar la contraseña. Por favor, inténtalo de nuevo.')
