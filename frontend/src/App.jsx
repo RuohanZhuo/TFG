@@ -15,6 +15,7 @@ import SubjectDetailPage from './pages/SubjectDetailPage/SubjectDetailPage'
 import SubjectDetailStudentPage from './pages/SubjectDetailStudentPage/SubjectDetailStudentPage'
 import Profile from './pages/ProfilePage/ProfilePage'
 import Footer from './components/Footer'
+import ClassroomTimetablePage from './pages/ClassroomTimetablePage/ClassroomTimetablePage'
 
 export default class App extends Component {
 
@@ -91,6 +92,7 @@ export default class App extends Component {
             <Route path="/subject/professor/:id" element={<SubjectDetailPage />} />
             <Route path="/subject/student/:id" element={<SubjectDetailStudentPage />} />
             <Route path='/profile/:username' element={<Profile />} />
+            <Route path="/timetable/classroom/:id" element={<ClassroomTimetablePage />} />
           </Routes>
         </div>
         <div>
