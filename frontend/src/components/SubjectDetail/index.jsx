@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Card } from 'react-bootstrap';
 import EnrollForm from '../EnrollForm'
 import EnrolledList from '../EnrolledList'
 import Timetable from '../Timetable'
@@ -45,7 +45,7 @@ export default class SubjectDetail extends Component {
           <Container className="bg-white rounded p-4 mt-5 shadow-lg">
             <Row>
               <Col className="text-center">
-                <h2>{subjectInfo.subjectName}</h2>
+                <h1>{subjectInfo.subjectName}</h1>
               </Col>
             </Row>
           </Container>
@@ -53,6 +53,11 @@ export default class SubjectDetail extends Component {
             <Row>
               <Col>
                 <h3>Description</h3>
+                <Card>
+                  <Card.Body>
+                    {subjectInfo.description}
+                  </Card.Body>
+                </Card>
               </Col>
             </Row>
           </Container>

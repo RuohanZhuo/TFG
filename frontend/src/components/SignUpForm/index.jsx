@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom'
+import Notification from '../Notification'
 import './index.css'
 
 export default function SignUp(){
@@ -12,11 +13,18 @@ export default function SignUp(){
     password: '',
     confirmPassword: '',
     errors: {},
+    notification: {
+      show: false,
+      message: '',
+      color: '',
+      router:'',
+      autoDismiss: false
+    }
   });
 
   const navigate = useNavigate()
 
-  const { username, email, password, confirmPassword, errors } = state
+  const { username, email, password, confirmPassword, errors, notification } = state
 
   const validateForm = () => {
     const errors = {}
@@ -64,19 +72,22 @@ export default function SignUp(){
 
       const data = response.data
 
-      if (data.code === '0000') {
-        alert(data.msg);
-        navigate('/login');
-      }else if (data.code === '1006' || data.code === '1007') {
-        errors[data.code === '1006' ? 'username' : 'email'] = data.msg;
-      } else {
-        console.log('error', data.msg);
+      const newNotification = {
+        show: true,
+        message: data.msg,
+        color: data.code === '0000' ? 'success' : 'error',
+        router: data.code === '0000' ? '/login' : '',
+        autoDismiss: data.code === '0000'
       }
 
+      if (data.code === '1006' || data.code === '1007') {
+        errors[data.code === '1006' ? 'username' : 'email'] = data.msg;
+      }
 
-      setState({ ...state, errors });
+      setState({ ...state, errors, notification: newNotification});
+
     } catch (error) {
-      console.log('Error en la solicitud:', error)
+      console.log('Request error:', error)
     }
   }
 
@@ -85,32 +96,35 @@ export default function SignUp(){
   }
 
       return (
-      <form className='data-form' onSubmit={onSubmit}>
-        <div className='container'>
-          <h1 className="text-center mb-4">Sign Up</h1>
-          <div className="mb-3">
-            <input type="text" className={classnames("form-control", {'is-invalid':errors.username})} placeholder="Username" value={username} onChange={changeHandle('username')}/>
-            {errors.username && <div className='invalid-feedback'>{errors.username}</div>}
-          </div>
+      <>
+        {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router}/>}
+        <form className='data-form' onSubmit={onSubmit}>
+          <div className='container'>
+            <h1 className="text-center mb-4">Sign Up</h1>
             <div className="mb-3">
-            <input type="email" className={classnames("form-control",{'is-invalid':errors.email})} placeholder="Email" value={email} onChange={changeHandle('email')} />
-            {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
+              <input type="text" className={classnames("form-control", {'is-invalid':errors.username})} placeholder="Username" value={username} onChange={changeHandle('username')}/>
+              {errors.username && <div className='invalid-feedback'>{errors.username}</div>}
+            </div>
+              <div className="mb-3">
+              <input type="email" className={classnames("form-control",{'is-invalid':errors.email})} placeholder="Email" value={email} onChange={changeHandle('email')} />
+              {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
+            </div>
+            <div className="mb-3">
+              <input type="password" className={classnames("form-control",{'is-invalid':errors.password})} placeholder="Password" value={password} onChange={changeHandle('password')} />
+              {errors.password && <div className='invalid-feedback'>{errors.password}</div>}
+            </div>
+            <div className="mb-3">
+              <input type="password" className={classnames("form-control",{'is-invalid':errors.confirmPassword})} placeholder="Confirm assword" value={confirmPassword} onChange={changeHandle('confirmPassword')} />
+              {errors.confirmPassword && <div className='invalid-feedback'>{errors.confirmPassword}</div>}
+            </div>
+            <button type="submit" className='btn btn-primary btn-block mt-3'>Register</button>
+            <p className="text-center mt-2">
+            Already have an account?{' '}
+            <span className="link" onClick={() => navigate('/login')}>Log in</span>
+            </p>
           </div>
-          <div className="mb-3">
-            <input type="password" className={classnames("form-control",{'is-invalid':errors.password})} placeholder="Password" value={password} onChange={changeHandle('password')} />
-            {errors.password && <div className='invalid-feedback'>{errors.password}</div>}
-          </div>
-          <div className="mb-3">
-            <input type="password" className={classnames("form-control",{'is-invalid':errors.confirmPassword})} placeholder="Confirm assword" value={confirmPassword} onChange={changeHandle('confirmPassword')} />
-            {errors.confirmPassword && <div className='invalid-feedback'>{errors.confirmPassword}</div>}
-          </div>
-          <button type="submit" className='btn btn-primary btn-block mt-3'>Register</button>
-          <p className="text-center mt-2">
-          Already have an account?{' '}
-          <span className="link" onClick={() => navigate('/login')}>Log in</span>
-          </p>
-        </div>
-      </form>
+        </form>
+      </>  
       )
     
 }

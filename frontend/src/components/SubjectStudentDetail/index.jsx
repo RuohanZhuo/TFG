@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Card } from 'react-bootstrap';
 import TimeList from '../TimeList'
+import ScheduleList from '../ScheduleList'
 
 export default class index extends Component {
   state = {
@@ -43,7 +44,7 @@ export default class index extends Component {
           <Container className="bg-white rounded p-4 mt-5 shadow-lg">
             <Row>
               <Col className="text-center">
-                <h2>{subjectInfo.subjectName}</h2>
+                <h1>{subjectInfo.subjectName}</h1>
               </Col>
             </Row>
           </Container>
@@ -51,6 +52,18 @@ export default class index extends Component {
             <Row>
               <Col>
                 <h3>Description</h3>
+                <Card>
+                  <Card.Body>
+                    {subjectInfo.description}
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+          <Container className="bg-white rounded p-4 mt-3 shadow-lg">
+            <Row>
+              <Col>
+                <ScheduleList subject={subjectInfo}/>
               </Col>
             </Row>
           </Container>

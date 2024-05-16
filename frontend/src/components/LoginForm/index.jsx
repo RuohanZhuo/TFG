@@ -1,71 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import axios from 'axios'
 import classnames from 'classnames'
-import { useNavigate } from 'react-router-dom';
-import './index.css';
+import { useNavigate } from 'react-router-dom'
+import Notification from '../Notification'
 
-export default function Login(props){
+export default function Login(props) {
 
-  const [state, setState] = useState({
+  const [formData, setFormData] = useState({
     username: '',
     password: '',
-    errorLogin:''
-  });
+    errorLogin: '',
+    notification: {
+      show: false,
+      message: '',
+      color: '',
+      router:'',
+      autoDismiss: false
+    }
+  })
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const { username, password, errorLogin } = state;
+  const token = localStorage.getItem("token")
+
+  if(token){
+    navigate('/')
+  }
+
+  const { username, password, errorLogin, notification } = formData
 
   const onSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
+
+    if (!username || !password) {
+      setFormData({ ...formData, errorLogin: 'Please complete all fields' })
+      return
+    }
 
     try {
-
       const response = await axios.post('http://localhost:3001/login', {
         username,
         password,
       });
 
-      const data =  response.data;
+      const data =  response.data
+
+      const newNotification = {
+        show: true,
+        message: data.msg,
+        color: data.code === '0000' ? 'success' : 'error',
+        router: data.code === '0000' ? '/' : '',
+        autoDismiss: data.code === '0000'
+      }
+
+      setFormData({ ...formData, errorLogin: '', notification: newNotification })
 
       if (data.code === '0000') {
-        alert('Inicio de sesión exitoso');
-        console.log(data)
         props.onLogin(data.data)
-        navigate('/');
-      } else if (data.code === '1003'){
-        setState({ ...state, errorLogin: data.msg });
-      }else{
-        console.error('Error en el inicio de sesión:', data.msg);
       }
 
     } catch (error) {
-      console.error('Error en la solicitud:', error);
+      console.error('Request error:', error)
     }
-  };
+  }
 
-  const changeHandle = (type) => (event) => {
-    setState({ ...state, [type]: event.target.value });
-  };
+  const onChange = (type) => (event) => {
+    setFormData({ ...formData, [type]: event.target.value, errorLogin: '' })
+  }
 
   return (
-    <form className="data-form" onSubmit={onSubmit}>
-      <div className="container">
-        <h1 className="text-center mb-4">Login</h1>
-        <div className="mb-3">
-          <input type="text" className={classnames("form-control",{'is-invalid':errorLogin==='Incorrect username'})} placeholder="Username" value={state.username} onChange={changeHandle('username')}/>
+    <>
+      {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router}/>}
+      <form className="data-form" onSubmit={onSubmit}>
+        <div className="container">
+          <h1 className="text-center mb-4">Login</h1>
+          <div className="mb-3">
+            <input type="text" className={classnames("form-control",{'is-invalid':errorLogin})} placeholder="Username" value={username} onChange={onChange('username')}/>
+          </div>
+          <div className="mb-3">
+            <input type="password" className={classnames("form-control",{'is-invalid':errorLogin})} placeholder="Password" value={password} onChange={onChange('password')}/>
+            {errorLogin && <div className="invalid-feedback">{errorLogin}</div>}
+          </div>
+          <button type="submit" className="btn btn-primary btn-block">Login</button>
+          <p className="text-center mt-2">
+            Don't have an account?{' '}
+            <span className="link" onClick={() => navigate('/sign')}>Sign up</span>
+          </p>
         </div>
-        <div className="mb-3">
-          <input type="password" className={classnames("form-control",{'is-invalid':errorLogin==='Incorrect password'})} placeholder="Password" value={state.password} onChange={changeHandle('password')}/>
-          {errorLogin && <div>{errorLogin}</div>}
-        </div>
-        <button type="submit" className="btn btn-primary btn-block">Login</button>
-        <p className="text-center mt-2">
-          Don't have an account?{' '}
-          <span className="link" onClick={() => navigate('/sign')}>Sign up</span>
-        </p>
-      </div>
-    </form>
-  );
-};
-
+      </form>
+    </> 
+  )
+}

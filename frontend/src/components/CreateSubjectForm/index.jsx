@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom'
+import Notification from '../Notification';
 import './index.css'
 
 export default function CreateSubject() {
@@ -9,12 +10,20 @@ export default function CreateSubject() {
   const [state, setState] = useState({
     subjectName: '',
     capacity: '',
+    description: '',
     errors: {},
+    notification: {
+      show: false,
+      message: '',
+      color: '',
+      router:'',
+      autoDismiss: false
+    },
   });
 
   const navigate = useNavigate()
 
-  const { subjectName, capacity, errors } = state
+  const { subjectName, capacity, errors, description, notification } = state
 
   const validateForm = () => {
     const errors = {}
@@ -63,26 +72,27 @@ export default function CreateSubject() {
         subjectName,
         acronym,
         capacity,
+        description,
       }, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
 
-      const data = response.data
+      const data = response.data;
 
-      if (data.code === '0000') {
-        alert(data.msg);
-        navigate('/subject');
-      } else if (data.code === '1006') {
-        errors.subjectName = data.msg;
-      } else {
-        console.log('error', data.msg);
-      }
+      const newNotification = {
+        show: true,
+        message: data.msg,
+        color: data.code === '0000' ? 'success' : 'error',
+        router: data.code === '0000' ? '/subject' : '',
+        autoDismiss: data.code === '0000'
+      };
 
-      setState({ ...state, errors });
+      setState({...state, errors, notification: newNotification });
+
     } catch (error) {
-      console.log('Error en la solicitud:', error)
+      console.log('Request error:', error)
     }
   }
 
@@ -95,12 +105,17 @@ export default function CreateSubject() {
   };
 
   return (
+    <>
+     {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router}/>}
     <form className='data-form' onSubmit={onSubmit}>
       <div className='container'>
         <h1 className="text-center mb-4">Create Subject</h1>
         <div className="mb-3">
           <input type="text" className={classnames("form-control", { 'is-invalid': errors.subjectName })} placeholder="Subject name" value={subjectName} onChange={changeHandle('subjectName')} />
           {errors.subjectName && <div className='invalid-feedback'>{errors.subjectName}</div>}
+        </div>
+        <div className="mb-3">
+          <textarea type="text" className='form-control' placeholder="description" value={description} onChange={changeHandle('description')} rows="5" />
         </div>
         <div className="mb-3">
           <input type="number" min="0" className={classnames("form-control", { 'is-invalid': errors.capacity })} placeholder="Capacity" value={capacity} onChange={changeHandle('capacity')} />
@@ -116,6 +131,7 @@ export default function CreateSubject() {
         </div>
       </div>
     </form>
+    </>
   )
 
 }

@@ -2,14 +2,23 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Row } from 'react-bootstrap';
 import Time from '../Time';
+import Notification from '../Notification';
+import './index.css'
 
-export default class Timetable extends Component {
+export default class index extends Component {
   state = {
     times: [],
     selectedDate: new Date(),
     selectedTime: null,
+    notification: {
+      show: false,
+      message: '',
+      color: '',
+      router:'',
+      autoDismiss: false
+    }
   };
 
   async componentDidMount() {
@@ -32,13 +41,19 @@ export default class Timetable extends Component {
   };
 
   handleDateChange = async (date) => {
-    await this.fetchTimes();
-    this.setState({ selectedDate: date, selectedTime: null });
-  };
+
+    const notification = this.state
+  
+    if(date===null){
+      return
+    }
+    await this.fetchTimes()
+    this.setState({ selectedDate: date, selectedTime: null, notification: { ...notification, show: false } })
+  }
 
   handleTimeSelect = (time) => {
-    this.setState({ selectedTime: time });
-  };
+    this.setState({ selectedTime: time })
+  }
 
   generateCombinedDate = (selectedTime) => {
     const { selectedDate } = this.state
@@ -70,21 +85,33 @@ export default class Timetable extends Component {
                     Authorization: `Bearer ${token}`
                 }
                 });
-                console.log('Response:', response.data);
-                if(response.data.code==='0000'){
+
+                const data = response.data;
+
+                const newNotification = {
+                  show: true,
+                  message: data.msg,
+                  color: data.code === '0000' ? 'success' : 'error',
+                  router: data.code === '0000' ? '' : '',
+                  autoDismiss: data.code === '0000'
+                };
+
+                this.setState({ notification: newNotification });
+
+                if(data.code==='0000'){
                 window.location.reload();
                 }
+
             } catch (error) {
                 console.error('Error submitting timetable:', error);
             }
-            console.log('Nueva fecha combinada:', combinedStartDate, combinedEndDate);
     } else {
       alert('No se ha seleccionado una hora.');
     }
   };
 
   render() {
-    const { selectedDate, times, selectedTime } = this.state;
+    const { selectedDate, times, selectedTime, notification } = this.state;
     const selectedDayOfWeek = selectedDate.getDay(); 
 
     const today = new Date();
@@ -99,58 +126,63 @@ export default class Timetable extends Component {
         <div className="container">
           <h2 className="mt-4 mb-3">Timetable</h2>
           <div className="d-flex flex-column align-items-center">
-            <DatePicker
-              selected={selectedDate}
-              onChange={this.handleDateChange}
-              dateFormat="MMMM dd, yyyy"
-              className="form-control mb-3"
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-            />
-            {isWithinOneWeek && timesForSelectedDay.length > 0 ? (
-              <ListGroup style={{ maxWidth: '400px' }}>
-                {timesForSelectedDay.map(time => {
-                  const timeDate = new Date(time.startTime);
-                  const currentTime = new Date();
-                  if (
-                    currentTime.getDate() === selectedDate.getDate() &&
-                    timeDate.getHours() >= currentTime.getHours()
-                  ) {
-                    return (
-                      <ListGroup.Item
-                        key={time._id}
-                        action
-                        active={selectedTime === time}
-                        onClick={() => this.handleTimeSelect(time)}
-                      >
-                        <Time {...time} />
-                      </ListGroup.Item>
-                    );
-                  } else if(currentTime.getDate() !== selectedDate.getDate()){
-                    return (
-                      <ListGroup.Item
-                        key={time._id}
-                        action
-                        active={selectedTime === time}
-                        onClick={() => this.handleTimeSelect(time)}
-                      >
-                        <Time {...time} />
-                      </ListGroup.Item>
-                    );
-                  }
-                  return null;
-                })}
-              </ListGroup>
-            ) : (
-              <p>No hay horarios disponibles para esta fecha.</p>
-            )}
-            <button className="btn btn-primary mt-3" onClick={this.handleFormSubmit}>
+          {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router}/>}
+            <Row className="top-row">
+              <DatePicker
+                selected={selectedDate}
+                onChange={this.handleDateChange}
+                dateFormat="MMMM dd, yyyy"
+                className="form-control mb-3"
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+              />
+            </Row>
+            <Row className="bottom-row">
+              {isWithinOneWeek && timesForSelectedDay.length > 0 ? (
+                <ListGroup style={{ maxWidth: '400px' }}>
+                  {timesForSelectedDay.map(time => {
+                    const timeDate = new Date(time.startTime);
+                    const currentTime = new Date();
+                    if (
+                      currentTime.getDate() === selectedDate.getDate() &&
+                      timeDate.getHours() >= currentTime.getHours()
+                    ) {
+                      return (
+                        <ListGroup.Item
+                          key={time._id}
+                          action
+                          active={selectedTime === time}
+                          onClick={() => this.handleTimeSelect(time)}
+                        >
+                          <Time {...time} />
+                        </ListGroup.Item>
+                      );
+                    } else if(currentTime.getDate() !== selectedDate.getDate()){
+                      return (
+                        <ListGroup.Item
+                          key={time._id}
+                          action
+                          active={selectedTime === time}
+                          onClick={() => this.handleTimeSelect(time)}
+                        >
+                          <Time {...time} />
+                        </ListGroup.Item>
+                      );
+                    }
+                    return null;
+                  })}
+                </ListGroup>
+              ) : (
+                <p>No schedules available for this date!</p>
+              )}
+            </Row>
+            <button className="btn btn-primary mt-3" onClick={this.handleFormSubmit} disabled={!selectedTime}>
               Book
             </button>
           </div>
         </div>
-      );
+      )
   }
 }
 

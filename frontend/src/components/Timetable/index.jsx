@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import TimetableForm from '../TimetableForm';
 import Time from '../Time';
+import './index.css'
 
 export default class index extends Component {
   state = {
     times: [],
-    showTimetableForm: false,
-    loading: true
   };
 
   async componentDidMount() {
@@ -19,38 +18,26 @@ export default class index extends Component {
           Authorization: `Bearer ${token}`
         }
       });
-      this.setState({ times: response.data.data, loading: false }); 
+      this.setState({ times: response.data.data }); 
     } catch (error) {
       console.error('Error fetching subject info:', error);
-      this.setState({ loading: false }); 
     }
   }
 
-  toggleTimetableForm = () => {
-    this.setState((prevState) => ({
-      showTimetableForm: !prevState.showTimetableForm
-    }));
-  };
-
   render() {
-    const { times, showTimetableForm, loading } = this.state;
+    const { times } = this.state;
 
     return (
       <div>
         <h2>Timetable</h2>
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
           <div>
-            {times.map(time => (
-              <Time key={time._id} {...time} />
-            ))}
-            <button onClick={this.toggleTimetableForm}>
-              {showTimetableForm ? 'Cancel' : 'Add new'}
-            </button>
-            {showTimetableForm && <TimetableForm subject={this.props.subject} />}
+            <div className='times-container'>
+              {times.map(time => (
+                <Time key={time._id} {...time} />
+              ))}
+            </div>
+            <TimetableForm subject={this.props.subject}/>
           </div>
-        )}
       </div>
     );
   }

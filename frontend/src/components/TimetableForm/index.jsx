@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './index.css'
+import { Form, Button, Col, Row } from 'react-bootstrap';
+import Notification from '../Notification';
+import './index.css';
 
 export default class TimetableForm extends Component {
   state = {
@@ -9,7 +11,14 @@ export default class TimetableForm extends Component {
     endTime: '',
     classroomOptions: [],
     selectedClassroom: null,
-    loading: false
+    notification: {
+      show: false,
+      message: '',
+      color: '',
+      router:'',
+      autoDismiss: false
+    },
+    showForm: false 
   };
 
   async componentDidMount() {
@@ -21,8 +30,12 @@ export default class TimetableForm extends Component {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      })
-      this.setState({ classroomOptions: response.data.data });
+      });
+
+      const data =  response.data;
+
+      this.setState({ classroomOptions : data.data });
+
     } catch (error) {
       console.error('Error fetching classrooms:', error);
     }
@@ -47,7 +60,7 @@ export default class TimetableForm extends Component {
     const token = localStorage.getItem('token');
   
     const { dayOfWeek, startTime, endTime, selectedClassroom } = this.state;
-  
+    
     const startHour = startTime.split(':')[0];
     const startMinute = startTime.split(':')[1];
     const endHour = endTime.split(':')[0];
@@ -68,58 +81,80 @@ export default class TimetableForm extends Component {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log('Response:', response.data);
-      this.setState({
-        dayOfWeek: '',
-        startTime: '',
-        endTime: '',
-        selectedClassroom: null, 
-        loading: false
-      });
-      if(response.data.code==='0000'){
+
+      const data = response.data;
+
+      const newNotification = {
+        show: true,
+        message: data.msg,
+        color: data.code === '0000' ? 'success' : 'error',
+        router: data.code === '0000' ? '' : '',
+        autoDismiss: data.code === '0000'
+      };
+
+      this.setState({ notification: newNotification });
+      
+      if (response.data.code === '0000') {
         window.location.reload();
       }
     } catch (error) {
       console.error('Error submitting timetable:', error);
-      this.setState({ loading: false });
     }
-  }
+  };
+
+  toggleForm = () => {
+    const {notification} = this.state;
+    this.setState(prevState => ({
+      showForm: !prevState.showForm
+    }));
+    if(notification.show){
+      this.setState({ notification: { ...this.state.notification, show: false } });
+    }
+  };
 
   render() {
-    const { dayOfWeek, startTime, endTime, classroomOptions, selectedClassroom, loading } = this.state;
+    const { dayOfWeek, startTime, endTime, classroomOptions, selectedClassroom, notification, showForm } = this.state;
 
     return (
-      <div className='timetableForm shadow p-3 rounded'>
-        <h3 className="mb-4">Timetable Form</h3>
-        <form onSubmit={this.handleSubmit} className="row g-3 align-items-center">
-          <div className="col-md-3">
-            <label htmlFor="dayOfWeek" className="form-label">Day of Week:</label>
-            <input type="number" id="dayOfWeek" name="dayOfWeek" value={dayOfWeek} onChange={this.handleChange} min={1} max={7} className="form-control" required />
-          </div>
-          <div className="col-md-3">
-            <label htmlFor="startTime" className="form-label">Start Time:</label>
-            <input type="time" id="startTime" name="startTime" value={startTime} onChange={this.handleChange} className="form-control" required />
-          </div>
-          <div className="col-md-3">
-            <label htmlFor="endTime" className="form-label">End Time:</label>
-            <input type="time" id="endTime" name="endTime" value={endTime} onChange={this.handleChange} className="form-control" required />
-          </div>
-          <div className="col-md-3">
-            <label htmlFor="selectedClassroom" className="form-label">Classroom:</label>
-            <select id="selectedClassroom" name="selectedClassroom" value={selectedClassroom ? selectedClassroom._id : ''} onChange={this.handleClassroomChange} className="form-select" style={{ height: '38px' }} required>
-              <option value="">Select a Classroom</option>
-              {classroomOptions.map(classroom => (
-                <option key={classroom._id} value={classroom._id}>{classroom.classroomName}</option>
-              ))}
-            </select>
-          </div>
-          <div className="col-md-12">
-            <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Submitting...' : 'Submit'}</button>
-          </div>
-        </form>
-      </div>
+      <>
+        {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router}/>}
+        <div className="timetableForm shadow p-3 rounded">
+          <Form onSubmit={this.handleSubmit} style={{ display: showForm ? 'block' : 'none' }}>
+            <Row className="mb-3 align-items-center">
+              <Col>
+                <Form.Label>Day of Week:</Form.Label>
+                <Form.Control type="number" name='dayOfWeek' defaultValue={dayOfWeek} onChange={this.handleChange} min={1} max={7} required />
+              </Col>
+              <Col>
+                <Form.Label>Start Time:</Form.Label>
+                <Form.Control type="time" name='startTime' defaultValue={startTime} onChange={this.handleChange} required />
+              </Col>
+              <Col>
+                <Form.Label>End Time:</Form.Label>
+                <Form.Control type="time" name='endTime' defaultValue={endTime} onChange={this.handleChange} required />
+              </Col>
+              <Col>
+                <Form.Label>Classroom:</Form.Label>
+                <Form.Select value={selectedClassroom ? selectedClassroom._id : ''} onChange={this.handleClassroomChange} required>
+                  <option value="">Select a Classroom</option>
+                  {classroomOptions.map(classroom => (
+                    <option key={classroom._id} value={classroom._id}>{classroom.classroomName}</option>
+                  ))}
+                </Form.Select>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Button variant="primary" type="submit">Add</Button>
+              </Col>
+              <Col>
+                {showForm && <Button variant="danger" onClick={this.toggleForm}>Cancel</Button>}
+              </Col>
+            </Row>
+          </Form>
+          {!showForm && <Button variant="primary" onClick={this.toggleForm}>Add New</Button>}
+        </div>
+      </>
     );
-    
-    
   }
 }

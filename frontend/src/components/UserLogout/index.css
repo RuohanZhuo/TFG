@@ -29,12 +29,9 @@
 
 .logo {
   max-width: 50px;
-  margin-right: 12px;
+  margin-right: 20px;
+  margin-left: 12px;
   height: auto; 
-}
-
-.menu-right{
-  margin-right: 5px;
 }
 
 .nav-link {
@@ -44,10 +41,16 @@
 
 .logo {
   width: 40px;
-  height: auto;
+  height: 35px;
   transition: transform 0.3s ease; 
 }
 
 .logo:hover {
   transform: scale(1.1);
+}
+
+.dropdown-menu{
+  position: fixed;
+  margin-right: 5px;
+  z-index: 1000;
 }

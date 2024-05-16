@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom'
+import Notification from '../Notification';
 import './index.css'
 
 export default function CreateClass(){
@@ -10,11 +11,18 @@ export default function CreateClass(){
     classroomName: '',
     studentCapacity: '',
     errors: {},
+    notification: {
+      show: false,
+      message: '',
+      color: '',
+      router:'',
+      autoDismiss: false
+    },
   });
 
   const navigate = useNavigate()
 
-  const { classroomName, studentCapacity, errors } = state
+  const { classroomName, studentCapacity, errors, notification } = state
 
   const validateForm = () => {
     const errors = {}
@@ -52,20 +60,20 @@ export default function CreateClass(){
         }
       });
 
-      const data = response.data
+      const data = response.data;
 
-      if (data.code === '0000') {
-        alert(data.msg);
-        navigate('/classroom');
-      }else if (data.code === '1006') {
-        errors.classroomName = data.msg;
-      } else {
-        console.log('error', data.msg);
-      }
+      const newNotification = {
+        show: true,
+        message: data.msg,
+        color: data.code === '0000' ? 'success' : 'error',
+        router: data.code === '0000' ? '/classroom' : '',
+        autoDismiss: data.code === '0000'
+      };
 
-      setState({ ...state, errors });
+      setState({...state, errors, notification: newNotification });
+
     } catch (error) {
-      console.log('Error en la solicitud:', error)
+      console.log('Request error:', error)
     }
   }
 
@@ -78,6 +86,8 @@ export default function CreateClass(){
   };
 
       return (
+      <>
+       {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router}/>}
       <form className='data-form' onSubmit={onSubmit}>
         <div className='container'>
           <h1 className="text-center mb-4">Create class</h1>
@@ -99,6 +109,7 @@ export default function CreateClass(){
           </div>
         </div>
       </form>
+      </>
       )
     
 }

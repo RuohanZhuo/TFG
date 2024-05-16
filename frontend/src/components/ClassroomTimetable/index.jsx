@@ -33,6 +33,7 @@ export default class ClassroomTimetable extends Component {
     const {timetableData} = this.state;
     if (!Array.isArray(timetableData)) return false;
     for (const entry of timetableData){
+      console.log(entry)
       if(entry.dayOfWeek === dayOfWeek) {
         const startHour = new Date(entry.startTime).getHours();
         const endHour = new Date(entry.endTime).getHours();

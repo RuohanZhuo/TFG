@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Navbar, Nav, NavDropdown, Offcanvas} from 'react-bootstrap'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 import HeaderProfessor from '../HeaderProfessor'
 import HeaderStudent from '../HeaderStudent'
 import logo from '../../img/logo.png'
@@ -11,7 +10,8 @@ import './index.css'
 
 export default function Logout(props) {
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const [showLeftDropdown, setShowLeftDropdown] = useState(false)
   const [showRightDropdown, setShowRightDropdown] = useState(false)
 
@@ -30,15 +30,12 @@ export default function Logout(props) {
       const data = response.data
 
       if (data.code === '0000') {
-        alert('logout exitoso')
         props.onLogout()
         navigate('/')
-      } else {
-        console.log(data)
-      }
+      } 
 
     } catch (error) {
-      console.error('Error en el logout:', error)
+      console.error('Request error:', error)
     }
   };
 
@@ -46,7 +43,7 @@ export default function Logout(props) {
   const username = localStorage.getItem("username")
 
   return (
-    <>       
+    <>    
       <Navbar bg="dark" variant="dark" expand="lg" className="px-0">
         <Navbar.Toggle aria-controls="navbarNavDropdown" />
         <Navbar.Collapse id="navbarNavDropdown">

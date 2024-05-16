@@ -70,7 +70,7 @@ export default class App extends Component {
 
     return (
       <div className="background-image">
-        <div>
+        <div className="header-wrapper">
           {isAuthenticated ? <UserHeader onLogout={this.handleLogout} /> : <Header />}
         </div>
         <div>
@@ -78,7 +78,7 @@ export default class App extends Component {
             <Route path="/" element={
               <div className="d-flex justify-content-center align-items-center min-vh-100">
                 <div className="welcome text-center display-1">
-                  <h1 className="display-1">Bienvenido a Reserva UPM</h1>
+                  <h1 className="display-1">Welcome to UPM Book</h1>
                 </div>
               </div>
             } />
