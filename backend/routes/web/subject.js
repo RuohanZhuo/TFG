@@ -13,8 +13,7 @@ router.post('/subject', checkTokenMiddleware, checkIsProfessorMiddleware, async 
   const subjectInfo = req.body;
 
   const existingSubject1 = await SubjectModel.findOne({ subjectName: subjectInfo.subjectName })
-  const existingSubject2 = await SubjectModel.findOne({ acronym: subjectInfo.acronym })
-  if (existingSubject1 || existingSubject2) {
+  if (existingSubject1) {
     return res.json({
       code: '4007',
       msg: 'Subject already exists',

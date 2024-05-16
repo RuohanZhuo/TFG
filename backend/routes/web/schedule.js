@@ -137,9 +137,10 @@ router.post('/schedule', checkTokenMiddleware, checkIsStudentMiddleware, async (
     }
 });
 
-router.get('/schedule', checkTokenMiddleware, checkIsStudentMiddleware, async (req, res) => {
+router.get('/schedule/:id', checkTokenMiddleware, checkIsStudentMiddleware, async (req, res) => {
     try {
-        const schedule = await ScheduleModel.find({student : req.user._id});
+        const schedule = await ScheduleModel.find({student : req.user._id, subject:req.params.id})
+        .populate('classroom');
         if (!schedule) {
             return res.json({
                 code: '7009',
