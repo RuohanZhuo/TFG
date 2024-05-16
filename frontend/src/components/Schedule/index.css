@@ -1,0 +1,9 @@
+.card-text-container {
+    display: flex;
+    gap: 10px; 
+  }
+  
+  .card-text-container span {
+    white-space: nowrap; 
+  }
+  

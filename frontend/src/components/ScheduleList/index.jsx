@@ -14,12 +14,11 @@ export default class index extends Component {
         const token = localStorage.getItem('token');
     
         try {
-          const response = await axios.get(`/schedule`, {
+          const response = await axios.get(`/schedule/${this.props.subject._id}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
           });
-          console.log(response.data.data)
           this.setState({ schedules: response.data.data }); 
         } catch (error) {
           console.error('Error fetching subject info:', error);
