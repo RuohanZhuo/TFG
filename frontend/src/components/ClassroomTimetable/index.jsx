@@ -38,23 +38,23 @@ export default class ClassroomTimetable extends Component {
         const startHour = new Date(entry.startTime).getHours();
         const endHour = new Date(entry.endTime).getHours();
         if (hour >= startHour && hour < endHour) {
-          return entry.subject.acronym; // La hora está dentro del intervalo de inicio y fin, por lo tanto está ocupada
+          return entry.subject.acronym; 
         }
       }
     }
-    return false; // La hora no está ocupada
+    return false; 
   }
 
 
 
 
+
   render() {
-    const horas = [];
-    const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-    const horasInicio = 9;
-    const horasFin = 21;
-    // const columnas = diasSemana.length + 1; // Días de la semana + Hora
-    const filas = 13; // Filas de la tabla
+    const hours = [];
+    const dayOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+    const startTime = 9;
+    const endTime = 21;
+    const rows = 13; 
     const { timetableData, loading } = this.state;
     
 
@@ -70,48 +70,42 @@ export default class ClassroomTimetable extends Component {
       );
     }
 
-    for (let i = horasInicio; i <= horasFin; i++) {
-      horas.push(`${i}:00`);
+    for (let i = startTime; i <= endTime; i++) {
+      hours.push(`${i}:00`);
     }
 
 
-    const tabla = [];
-    // Primera fila: días de la semana
-    const primeraFila = [<th key="hora">Hora</th>];
-    for (let i = 0; i < diasSemana.length; i++) {
-      primeraFila.push(<th key={diasSemana[i]}>{diasSemana[i]}</th>);
+    const table = [];
+    const firstRow = [<th key="hour">Hora</th>];
+    for (let i = 0; i < dayOfWeek.length; i++) {
+      firstRow.push(<th key={dayOfWeek[i]}>{dayOfWeek[i]}</th>);
     }
-    tabla.push(<tr key="dias">{primeraFila}</tr>);
+    table.push(<tr key="day">{firstRow}</tr>);
     
-    // Resto de las filas
-    for (let i = 0; i < filas-1; i++) {
-      const fila = [];
-      // Primera columna: horas
-      fila.push(<td key={`hora-${i}`}>{horas[i]} - {horas[i+1]} </td>);
+    for (let i = 0; i < rows-1; i++) {
+      const row = [];
+      row.push(<td key={`hour-${i}`}>{hours[i]} - {hours[i+1]} </td>);
       
-      // Celdas de los días de la semana
-      for (let j = 0; j < diasSemana.length; j++) {
-        const isOccupied = this.isHourOccupied(j + 1, horasInicio + i + 1); // Verifica si la hora está ocupada
-        fila.push(
-          <td key={`${diasSemana[j]}-${i}`} style={{ backgroundColor: isOccupied ? 'yellow' : 'white' }}>
-            {isOccupied ? this.isHourOccupied(j + 1, horasInicio + i + 1) : ''}
+      for (let j = 0; j < dayOfWeek.length; j++) {
+        const isOccupied = this.isHourOccupied(j + 1, startTime + i + 1); 
+        row.push(
+          <td key={`${dayOfWeek[j]}-${i}`} style={{ backgroundColor: isOccupied ? 'yellow' : 'white' }}>
+            {isOccupied ? this.isHourOccupied(j + 1, startTime + i + 1) : ''}
           </td>
         );
       }
       
-      // Agregar la fila a la tabla
-      tabla.push(<tr key={`fila-${i}`}>{fila}</tr>);
+      table.push(<tr key={`row-${i}`}>{row}</tr>);
     }
 
 
     if (timetableData) {
     return (
       <div>
-         {/* <h2>Horario de {}</h2>   */}
         <div className="table-container">
           <table border="1">
             <tbody>
-              {tabla}
+              {table}
             </tbody>
           </table>
         </div>
