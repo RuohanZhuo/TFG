@@ -1,40 +1,40 @@
-/* Estilos para centrar la tabla en la página */
+
 .table-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Altura completa de la ventana */
+    height: 100vh; 
   }
   
-  /* Estilos para la tabla */
+
   table {
     border-collapse: collapse;
-    width: 50; /* Ajusta la tabla al contenido */
-    margin: auto; /* Asegura que la tabla esté centrada */
+    width: 50; 
+    margin: auto; 
   }
   
-  /* Estilos para las celdas */
+
   th, td {
     border: 1px solid black;
-    padding: 10px; /* Espaciado interno de las celdas */
+    padding: 10px; 
     text-align: center;
-    width: 150px; /* Ancho de las celdas */
-    height: 50px; /* Alto de las celdas */
+    width: 150px; 
+    height: 50px; 
   }
   
-  /* Primera fila (encabezados) */
+
   th {
     background-color: grey;
     color: white;
   }
   
-  /* Primera columna de las filas (horas) */
+
   td:first-child {
     background-color: grey;
     color: white;
   }
   
-  /* Estilos para las celdas del resto de la tabla */
+
   td {
     background-color: white;
     color: black;
