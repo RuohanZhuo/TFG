@@ -29,27 +29,33 @@ router.get('/student/subject/:id', checkTokenMiddleware, checkIsProfessorMiddlew
     try {
         const subjectId = req.params.id;
 
-        const students = await StudentSubjectModel.find({ subject: subjectId })
+        const studentSubjects = await StudentSubjectModel.find({ subject: subjectId })
             .populate({
                 path: 'student',
                 select: '-password'
             });
 
-        if (students.length > 0) {
+        if (studentSubjects.length > 0) {
+            const studentsWithSubjectIds = studentSubjects.map(studentSubject => {
+                const student = studentSubject.student.toObject();
+                student.studentSubjectId = studentSubject._id;
+                return student;
+            });
+
             res.json({
                 code: '0000',
                 msg: 'Successfully retrieved the students',
-                data: students.map(course => course.student)
+                data: studentsWithSubjectIds
             });
         } else {
-            return res.json({
+            res.json({
                 code: '2004',
                 msg: 'No students found for this subject',
-                data: students
+                data: studentSubjects
             });
         }
     } catch (err) {
-        console.log(err)
+        console.log(err);
         res.json({
             code: '2005',
             msg: 'Error while fetching the students',
@@ -57,6 +63,7 @@ router.get('/student/subject/:id', checkTokenMiddleware, checkIsProfessorMiddlew
         });
     }
 });
+
 
 router.get('/student/:id', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     try {

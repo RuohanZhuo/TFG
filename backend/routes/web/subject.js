@@ -185,8 +185,8 @@ router.patch('/subject/:id', checkTokenMiddleware, checkIsProfessorMiddleware, a
       msg: 'Subject updated successfully',
       data: subject
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     res.json({
       code: '4011',
       msg: 'Error while updating subject',
