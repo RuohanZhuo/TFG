@@ -1,40 +1,53 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
-import './index.css';
+import React, { useState } from 'react'
+import { NavLink } from 'react-router-dom'
+import { Card } from 'react-bootstrap'
+import './index.css'
 
-export default class SubjectItem extends Component {
-    render() {
-        const { acronym, subjectName, _id } = this.props;
-        const rol = localStorage.getItem('rol');
-        
-        return (
-            <div className="card-container d-flex align-items-center justify-content-center">
-                <Card className="mb-3" style={{ width: '300px', margin: '10px', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
-                    <NavLink to={`/subject/${rol}/${_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <div
-                            className="placeholder-image"
-                            style={{
-                                width: '100%',
-                                height: '150px',
-                                backgroundColor: '#123456', 
-                                color: '#ffffff', 
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '24px', 
-                            }}
-                        >
-                            {acronym}
-                        </div>
-                    </NavLink>
-                    <Card.Body style={{ height: '100px' }}>
-                        <NavLink to={`/subject/${rol}/${_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <Card.Title style={{ fontSize: '1.2rem', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{subjectName}</Card.Title>
-                        </NavLink>
-                    </Card.Body>
-                </Card>
-            </div>
-        );
+export default function SubjectItem({ acronym, subjectName, _id, onDelete }) {
+  const [showSettings, setShowSettings] = useState(false)
+  const [showDelete, setShowDelete] = useState(false)
+
+  const rol = localStorage.getItem('rol')
+
+  const handleMouseEnter = () => {
+    if(rol==='professor'){
+      setShowSettings(true)
     }
+  };
+
+  const handleMouseLeave = () => {
+    setShowSettings(false)
+    setShowDelete(false)
+  };
+
+  const handleSettingsClick = () => {
+    setShowDelete(!showDelete)
+  };
+
+  return (
+    <div className="card-container d-flex align-items-center justify-content-center" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <Card className="mb-3">
+        <div className="position-relative">
+          <NavLink to={`/subject/${rol}/${_id}`} className='subject-link'>
+            <div className="placeholder-image">
+              {acronym}
+            </div>
+          </NavLink>
+          {showSettings && (
+            <div className="settings-container">
+              <button className="btn btn-sm btn-secondary settings-button" onClick={handleSettingsClick}>⚙️</button>
+              {showDelete && (
+                <button className="btn btn-sm btn-danger delete-button" onClick={() => onDelete(_id)}>🗑️</button>
+              )}
+            </div>
+          )}
+        </div>
+        <Card.Body>
+          <NavLink to={`/subject/${rol}/${_id}`} className='subject-link'>
+            <Card.Title>{subjectName}</Card.Title>
+          </NavLink>
+        </Card.Body>
+      </Card>
+    </div>
+  );
 }

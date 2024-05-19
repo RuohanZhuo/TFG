@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import classnames from 'classnames'
 import { useNavigate } from 'react-router-dom'
@@ -23,9 +23,11 @@ export default function Login(props) {
 
   const token = localStorage.getItem("token")
 
-  if(token){
-    navigate('/')
-  }
+  useEffect(() => {
+    if (token) {
+      navigate('/')
+    }
+  }, [navigate, token])
 
   const { username, password, errorLogin, notification } = formData
 

@@ -5,9 +5,10 @@ import './index.css'
 
 export default class index extends Component {
   render() {
+    const {setShowLeftDropdown} = this.props
     return (
           <>
-            <Nav.Link as={NavLink} to='/mySubject'>My Subject</Nav.Link>
+            <Nav.Link as={NavLink} to='/mySubject' onClick={() => setShowLeftDropdown(false)}>My Subject</Nav.Link>
           </>
     )
   }

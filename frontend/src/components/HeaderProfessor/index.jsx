@@ -3,11 +3,15 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 
 export default class index extends Component {
+
   render() {
+
+    const {setShowLeftDropdown} = this.props
+
     return (
       <>
-        <Nav.Link as={NavLink} to='/classroom'>Classroom</Nav.Link>
-        <Nav.Link as={NavLink} to='/subject'>Subject</Nav.Link>
+        <Nav.Link as={NavLink} to='/classroom' onClick={() => setShowLeftDropdown(false)}>Classroom</Nav.Link>
+        <Nav.Link as={NavLink} to='/subject' onClick={() => setShowLeftDropdown(false)}>Subject</Nav.Link>
       </>
     );
   }

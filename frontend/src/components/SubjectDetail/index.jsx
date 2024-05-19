@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Container, Row, Col, Spinner, Card } from 'react-bootstrap';
+import React, { Component } from 'react'
+import axios from 'axios'
+import { Container, Row, Col, Spinner, Card } from 'react-bootstrap'
 import EnrollForm from '../EnrollForm'
 import EnrolledList from '../EnrolledList'
 import Timetable from '../Timetable'
+import Description from '../Description'
 
 export default class SubjectDetail extends Component {
   state = {
@@ -12,7 +13,7 @@ export default class SubjectDetail extends Component {
   };
 
   async componentDidMount() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token')
 
     try {
       const response = await axios.get(`http://localhost:3001/subject/${this.props.id}`, {
@@ -20,15 +21,15 @@ export default class SubjectDetail extends Component {
           Authorization: `Bearer ${token}`
         }
       });
-      this.setState({ subjectInfo: response.data.data, loading: false }); 
+      this.setState({ subjectInfo: response.data.data, loading: false })
     } catch (error) {
-      console.error('Error fetching subject info:', error);
-      this.setState({ loading: false }); 
+      console.error('Error fetching subject info:', error)
+      this.setState({ loading: false });
     }
   }
 
   render() {
-    const { subjectInfo, loading } = this.state;
+    const { subjectInfo, loading } = this.state
     if (loading) {
       return (
         <div className="text-center mt-5">
@@ -55,7 +56,7 @@ export default class SubjectDetail extends Component {
                 <h3>Description</h3>
                 <Card>
                   <Card.Body>
-                    {subjectInfo.description}
+                    <Description subject={subjectInfo}/>
                   </Card.Body>
                 </Card>
               </Col>
@@ -89,7 +90,7 @@ export default class SubjectDetail extends Component {
         <div className="mt-5 text-center">
           <p>No se pudo obtener la información del sujeto.</p>
         </div>
-      );
+      )
     }
   }
 }

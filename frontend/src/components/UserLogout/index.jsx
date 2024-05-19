@@ -68,7 +68,7 @@ export default function Logout(props) {
         <Offcanvas.Body>
           <Nav className="flex-column">
             <Nav.Link as={NavLink} to="/" onClick={() => setShowLeftDropdown(false)}>Home</Nav.Link>
-            {rol === 'professor' ? <HeaderProfessor/> : <HeaderStudent />}
+            {rol === 'professor' ? <HeaderProfessor setShowLeftDropdown={setShowLeftDropdown}/> : <HeaderStudent setShowLeftDropdown={setShowLeftDropdown}/>}
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>

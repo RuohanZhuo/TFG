@@ -14,13 +14,13 @@ export default class StudentsList extends Component {
       show: false,
       message: '',
       color: '',
-      router:'',
-      autoDismiss: false
+      router: '',
+      autoDismiss: false,
     },
   };
 
   componentDidMount() {
-    this.fetchStudents();
+    this.fetchStudents()
   }
 
   fetchStudents = () => {
@@ -68,8 +68,8 @@ export default class StudentsList extends Component {
 
         this.setState({ notification: newNotification })
 
-        if(data.code==='0000'){
-            window.location.reload();
+        if (data.code === '0000') {
+          window.location.reload();
         }
 
       })
@@ -90,44 +90,48 @@ export default class StudentsList extends Component {
 
     return (
       <>
-      {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router}/>}
-      <Container style={{ maxWidth: '400px' }}>
-        <Row className="justify-content-center">
-          <Col>
-            <h3>Student List</h3>
-            <Form.Group>
-              <Form.Control
-                type="text"
-                placeholder="Buscar alumno"
-                value={searchQuery}
-                onChange={this.handleSearchChange}
-              />
-            </Form.Group>
-            <div className="list-container">
-              <ListGroup>
-                {filteredStudents.map(student => (
-                  <ListGroup.Item key={student._id} action onClick={() => this.handleSelectStudent(student)}>
-                    <Row>
-                      <Col sm={12}>
-                        <div className="text-center">
+        {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router} />}
+        <Container style={{ maxWidth: '400px' }}>
+          <Row className="justify-content-center">
+            <Col>
+              <h3>Student List</h3>
+              <Form.Group>
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar alumno"
+                  value={searchQuery}
+                  onChange={this.handleSearchChange}
+                />
+              </Form.Group>
+              <div className="list-container">
+                <ListGroup>
+                  {filteredStudents.map(student => (
+                    <ListGroup.Item
+                      key={student._id}
+                      action
+                      className={student._id === selectedStudent?._id ? 'selected-student' : ''}
+                      onClick={() => this.handleSelectStudent(student)}
+                    >
+                      <Row>
+                        <Col sm={12}>
+                          <div className="student-info text-center flex-grow-1">
                             <Student {...student} />
-                        </div>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            </div>
-            <div className="mt-3 d-flex justify-content-center">
-              <Button variant="success" onClick={this.handleSendStudent} disabled={!selectedStudent}>
-                Enroll
-              </Button>
-            </div>
-          </Col>
-        </Row>
-      </Container>
-    </> 
+                          </div>
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </div>
+              <div className="mt-3 d-flex justify-content-center">
+                <Button variant="success" onClick={this.handleSendStudent} disabled={!selectedStudent}>
+                  Enroll
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </>
     )
   }
 }
-
