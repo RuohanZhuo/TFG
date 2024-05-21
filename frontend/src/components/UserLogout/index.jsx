@@ -4,6 +4,7 @@ import { Navbar, Nav, NavDropdown, Offcanvas} from 'react-bootstrap'
 import axios from 'axios'
 import HeaderProfessor from '../HeaderProfessor'
 import HeaderStudent from '../HeaderStudent'
+import HeaderAdmin from '../HeaderAdmin'
 import logo from '../../img/logo.png'
 import menu from '../../img/menu.png'
 import './index.css'
@@ -68,7 +69,9 @@ export default function Logout(props) {
         <Offcanvas.Body>
           <Nav className="flex-column">
             <Nav.Link as={NavLink} to="/" onClick={() => setShowLeftDropdown(false)}>Home</Nav.Link>
-            {rol === 'professor' ? <HeaderProfessor setShowLeftDropdown={setShowLeftDropdown}/> : <HeaderStudent setShowLeftDropdown={setShowLeftDropdown}/>}
+            {rol === 'professor' && <HeaderProfessor setShowLeftDropdown={setShowLeftDropdown} />}
+            {rol === 'student' && <HeaderStudent setShowLeftDropdown={setShowLeftDropdown} />}
+            {rol === 'admin' && <HeaderAdmin setShowLeftDropdown={setShowLeftDropdown} />}
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>

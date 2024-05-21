@@ -5,26 +5,26 @@ import { useNavigate } from 'react-router-dom'
 import Notification from '../Notification'
 import './index.css'
 
-export default function SignUp(){
-
+export default function SignUp() {
   const [state, setState] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
+    admin: false,
     errors: {},
     notification: {
       show: false,
       message: '',
       color: '',
-      router:'',
+      router: '',
       autoDismiss: false
     }
   });
 
   const navigate = useNavigate()
 
-  const { username, email, password, confirmPassword, errors, notification } = state
+  const { username, email, password, confirmPassword, admin, errors, notification } = state
 
   const validateForm = () => {
     const errors = {}
@@ -68,6 +68,7 @@ export default function SignUp(){
         email,
         password,
         confirmPassword,
+        admin
       });
 
       const data = response.data
@@ -84,7 +85,7 @@ export default function SignUp(){
         errors[data.code === '1006' ? 'username' : 'email'] = data.msg;
       }
 
-      setState({ ...state, errors, notification: newNotification});
+      setState({ ...state, errors, notification: newNotification });
 
     } catch (error) {
       console.log('Request error:', error)
@@ -92,41 +93,45 @@ export default function SignUp(){
   }
 
   const changeHandle = (type) => (event) => {
-    setState({ ...state, [type]: event.target.value })
+    const value = type === 'admin' ? event.target.checked : event.target.value;
+    setState({ ...state, [type]: value });
   }
 
-      return (
-      <>
-        {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router}/>}
-        <form className='data-form' onSubmit={onSubmit}>
-          <div className='container'>
-            <h1 className="text-center mb-4">Sign Up</h1>
-            <div className="mb-3">
-              <input type="text" className={classnames("form-control", {'is-invalid':errors.username})} placeholder="Username" value={username} onChange={changeHandle('username')}/>
-              {errors.username && <div className='invalid-feedback'>{errors.username}</div>}
-            </div>
-              <div className="mb-3">
-              <input type="email" className={classnames("form-control",{'is-invalid':errors.email})} placeholder="Email" value={email} onChange={changeHandle('email')} />
-              {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
-            </div>
-            <div className="mb-3">
-              <input type="password" className={classnames("form-control",{'is-invalid':errors.password})} placeholder="Password" value={password} onChange={changeHandle('password')} />
-              {errors.password && <div className='invalid-feedback'>{errors.password}</div>}
-            </div>
-            <div className="mb-3">
-              <input type="password" className={classnames("form-control",{'is-invalid':errors.confirmPassword})} placeholder="Confirm assword" value={confirmPassword} onChange={changeHandle('confirmPassword')} />
-              {errors.confirmPassword && <div className='invalid-feedback'>{errors.confirmPassword}</div>}
-            </div>
-            <button type="submit" className='btn btn-primary btn-block mt-3'>Register</button>
-            <p className="text-center mt-2">
+  const canSelectAdmin = email.endsWith('@upm.es');
+
+  return (
+    <>
+      {notification.show && <Notification message={notification.message} color={notification.color} autoDismiss={notification.autoDismiss} router={notification.router} />}
+      <form className='data-form' onSubmit={onSubmit}>
+        <div className='container'>
+          <h1 className="text-center mb-4">Sign Up</h1>
+          <div className="mb-3">
+            <input type="text" className={classnames("form-control", { 'is-invalid': errors.username })} placeholder="Username" value={username} onChange={changeHandle('username')} />
+            {errors.username && <div className='invalid-feedback'>{errors.username}</div>}
+          </div>
+          <div className="mb-3">
+            <input type="email" className={classnames("form-control", { 'is-invalid': errors.email })} placeholder="Email" value={email} onChange={changeHandle('email')} />
+            {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
+          </div>
+          <div className="mb-3">
+            <input type="password" className={classnames("form-control", { 'is-invalid': errors.password })} placeholder="Password" value={password} onChange={changeHandle('password')} />
+            {errors.password && <div className='invalid-feedback'>{errors.password}</div>}
+          </div>
+          <div className="mb-3">
+            <input type="password" className={classnames("form-control", { 'is-invalid': errors.confirmPassword })} placeholder="Confirm Password" value={confirmPassword} onChange={changeHandle('confirmPassword')} />
+            {errors.confirmPassword && <div className='invalid-feedback'>{errors.confirmPassword}</div>}
+          </div>
+          <div className="mb-3 form-check">
+            <input type="checkbox" className="form-check-input" id="adminCheck" checked={admin} onChange={changeHandle('admin')} disabled={!canSelectAdmin} />
+            <label className="form-check-label" htmlFor="adminCheck">Register as Admin</label>
+          </div>
+          <button type="submit" className='btn btn-primary btn-block mt-3'>Register</button>
+          <p className="text-center mt-2">
             Already have an account?{' '}
             <span className="link" onClick={() => navigate('/login')}>Log in</span>
-            </p>
-          </div>
-        </form>
-      </>  
-      )
-    
+          </p>
+        </div>
+      </form>
+    </>
+  )
 }
-
-

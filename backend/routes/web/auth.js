@@ -16,7 +16,7 @@ router.post('/reg', async (req, res) => {
     rol = "student";
   }else if(email.endsWith('@upm.es')){
     console.log(admin)
-    if(admin && admin == "true") {
+    if(admin === true || admin === "true") {
       rol = "admin"
     }
     else {
