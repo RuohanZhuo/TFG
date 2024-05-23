@@ -44,8 +44,8 @@ export default function SubjectItem({ acronym, subjectName, _id, onDelete }) {
           )}
         </div>
         <Card.Body>
-          <NavLink to={`/subject/${rol}/${_id}`} className='subject-link'>
-            <Card.Title>{subjectName}</Card.Title>
+          <NavLink to={`/subject/${rol}/${_id}`} title={subjectName} className='subject-link'>
+            <Card.Title className='subject-title'>{subjectName}</Card.Title>
           </NavLink>
         </Card.Body>
       </Card>

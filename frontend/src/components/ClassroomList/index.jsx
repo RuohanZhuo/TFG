@@ -70,6 +70,9 @@ export default function ClassroomList() {
 
       setItems(items.filter(item => item._id !== selectedClassroomId))
       handleCloseModal();
+      if(data.code==='0000'){
+        window.location.reload()
+      }
     } catch (error) {
       console.error('Error to delete classroom:', error)
     }
