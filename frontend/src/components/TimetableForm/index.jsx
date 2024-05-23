@@ -22,7 +22,6 @@ export default class TimetableForm extends Component {
   };
 
   async componentDidMount() {
-
     const token = localStorage.getItem('token')
 
     try {
@@ -32,10 +31,7 @@ export default class TimetableForm extends Component {
         }
       });
 
-      const data =  response.data;
-
-      this.setState({ classroomOptions : data.data });
-
+      this.setState({ classroomOptions : response.data.data })
     } catch (error) {
       console.error('Error fetching classrooms:', error);
     }
@@ -58,7 +54,6 @@ export default class TimetableForm extends Component {
     e.preventDefault();
   
     const token = localStorage.getItem('token');
-  
     const { dayOfWeek, startTime, endTime, selectedClassroom } = this.state;
     
     const startHour = startTime.split(':')[0];
@@ -98,7 +93,7 @@ export default class TimetableForm extends Component {
         window.location.reload();
       }
     } catch (error) {
-      console.error('Error submitting timetable:', error);
+      console.error('Error submitting timetable:', error)
     }
   };
 
@@ -123,15 +118,15 @@ export default class TimetableForm extends Component {
             <Row className="mb-3 align-items-center">
               <Col>
                 <Form.Label>Day of Week:</Form.Label>
-                <Form.Control type="number" name='dayOfWeek' defaultValue={dayOfWeek} onChange={this.handleChange} min={1} max={7} required />
+                <Form.Control type="number" name='dayOfWeek' value={dayOfWeek} onChange={this.handleChange} min={1} max={7} required />
               </Col>
               <Col>
                 <Form.Label>Start Time:</Form.Label>
-                <Form.Control type="time" name='startTime' defaultValue={startTime} onChange={this.handleChange} required />
+                <Form.Control type="time" name='startTime' value={startTime} onChange={this.handleChange} required />
               </Col>
               <Col>
                 <Form.Label>End Time:</Form.Label>
-                <Form.Control type="time" name='endTime' defaultValue={endTime} onChange={this.handleChange} required />
+                <Form.Control type="time" name='endTime' value={endTime} onChange={this.handleChange} required />
               </Col>
               <Col>
                 <Form.Label>Classroom:</Form.Label>
@@ -155,6 +150,6 @@ export default class TimetableForm extends Component {
           {!showForm && <Button variant="primary" onClick={this.toggleForm}>Add New</Button>}
         </div>
       </>
-    );
+    )
   }
 }

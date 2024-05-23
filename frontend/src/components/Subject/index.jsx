@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Card } from 'react-bootstrap'
+import { FaTrashAlt } from "react-icons/fa"
 import './index.css'
 
 export default function SubjectItem({ acronym, subjectName, _id, onDelete }) {
@@ -37,7 +38,7 @@ export default function SubjectItem({ acronym, subjectName, _id, onDelete }) {
             <div className="settings-container">
               <button className="btn btn-sm btn-secondary settings-button" onClick={handleSettingsClick}>⚙️</button>
               {showDelete && (
-                <button className="btn btn-sm btn-danger delete-button" onClick={() => onDelete(_id)}>🗑️</button>
+                <button className="btn btn-sm btn-danger delete-button" onClick={() => onDelete(_id)}><FaTrashAlt/></button>
               )}
             </div>
           )}
