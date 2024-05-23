@@ -104,7 +104,7 @@ router.post('/login', async (req, res) => {
       username: user.username,
       _id: user._id
     }, secret, {
-      expiresIn: 60 * 60 * 24
+      expiresIn: 60 * 60
     });
 
     res.json({
