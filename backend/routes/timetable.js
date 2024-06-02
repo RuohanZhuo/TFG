@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const TimetableModel = require('../../models/TimetableModel');
-const SubjectModel = require('../../models/SubjectModel');
-const ScheduleModel = require('../../models/ScheduleModel');
+const TimetableModel = require('../models/TimetableModel');
+const SubjectModel = require('../models/SubjectModel');
+const ScheduleModel = require('../models/ScheduleModel');
 
-const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
-const checkIsNotStudentMiddleware = require('../../middlewares/checkIsNotStudentMiddleware');
-const checkIsNotAdminMiddleware = require('../../middlewares/checkIsNotAdminMiddleware');
-const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
+const checkIsProfessorMiddleware = require('../middlewares/checkIsProfessorMiddleware');
+const checkIsNotStudentMiddleware = require('../middlewares/checkIsNotStudentMiddleware');
+const checkIsNotAdminMiddleware = require('../middlewares/checkIsNotAdminMiddleware');
+const checkTokenMiddleware = require('../middlewares/checkTokenMiddleware');
 
 function resetDate(hour, minute){
     const date = new Date(2000, 0, 1, hour, minute);

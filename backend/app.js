@@ -1,16 +1,15 @@
-var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-const authRouter = require('./routes/web/auth');
-const classroomRouter = require('./routes/web/classroom');
-const subjectRouter = require('./routes/web/subject');
-const userRouter = require('./routes/web/user');
-const studentSubjectRouter = require('./routes/web/studentSubject');
-const timetableRouter = require('./routes/web/timetable');
-const scheduleRouter = require('./routes/web/schedule');
+const authRouter = require('./routes/auth');
+const classroomRouter = require('./routes/classroom');
+const subjectRouter = require('./routes/subject');
+const userRouter = require('./routes/user');
+const studentSubjectRouter = require('./routes/studentSubject');
+const timetableRouter = require('./routes/timetable');
+const scheduleRouter = require('./routes/schedule');
 
 var app = express();
 

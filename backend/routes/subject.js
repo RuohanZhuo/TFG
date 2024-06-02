@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const TimetableModel = require('../../models/TimetableModel');
-const ScheduleModel = require('../../models/ScheduleModel');
-const StudentSubjectModel = require('../../models/StudentSubjectModel');
-const SubjectModel = require('../../models/SubjectModel');
+const TimetableModel = require('../models/TimetableModel');
+const ScheduleModel = require('../models/ScheduleModel');
+const StudentSubjectModel = require('../models/StudentSubjectModel');
+const SubjectModel = require('../models/SubjectModel');
 
-const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
-const checkIsNotAdminMiddleware = require('../../middlewares/checkIsNotAdminMiddleware');
-const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
+const checkIsProfessorMiddleware = require('../middlewares/checkIsProfessorMiddleware');
+const checkIsNotAdminMiddleware = require('../middlewares/checkIsNotAdminMiddleware');
+const checkTokenMiddleware = require('../middlewares/checkTokenMiddleware');
 
 router.post('/subject', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
   const subjectInfo = req.body;

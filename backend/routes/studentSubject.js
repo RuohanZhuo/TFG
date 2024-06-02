@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const UserModel = require('../../models/UserModel');
-const SubjectModel = require('../../models/SubjectModel');
-const StudentSubjectModel = require('../../models/StudentSubjectModel');
-const ScheduleModel = require('../../models/ScheduleModel');
+const UserModel = require('../models/UserModel');
+const SubjectModel = require('../models/SubjectModel');
+const StudentSubjectModel = require('../models/StudentSubjectModel');
+const ScheduleModel = require('../models/ScheduleModel');
 
-const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
-const checkIsStudentMiddleware = require('../../middlewares/checkIsStudentMiddleware');
-const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
+const checkIsProfessorMiddleware = require('../middlewares/checkIsProfessorMiddleware');
+const checkIsStudentMiddleware = require('../middlewares/checkIsStudentMiddleware');
+const checkTokenMiddleware = require('../middlewares/checkTokenMiddleware');
 
 router.post('/studentSubject', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     try {

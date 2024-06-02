@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const StudentSubjectModel = require('../../models/StudentSubjectModel');
-const ScheduleModel = require('../../models/ScheduleModel');
-const ClassroomModel = require('../../models/ClassroomModel');
-const TimetableModel = require('../../models/TimetableModel');
+const StudentSubjectModel = require('../models/StudentSubjectModel');
+const ScheduleModel = require('../models/ScheduleModel');
+const ClassroomModel = require('../models/ClassroomModel');
+const TimetableModel = require('../models/TimetableModel');
 
-const checkIsStudentMiddleware = require('../../middlewares/checkIsStudentMiddleware');
-const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
+const checkIsStudentMiddleware = require('../middlewares/checkIsStudentMiddleware');
+const checkTokenMiddleware = require('../middlewares/checkTokenMiddleware');
 
 function resetDateToZero(date) {
     date.setSeconds(0);

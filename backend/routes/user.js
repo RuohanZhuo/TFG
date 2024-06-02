@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const UserModel = require('../../models/UserModel');
-const StudentSubjectModel = require('../../models/StudentSubjectModel');
+const UserModel = require('../models/UserModel');
+const StudentSubjectModel = require('../models/StudentSubjectModel');
 const bcrypt = require('bcrypt');
 
-const checkIsProfessorMiddleware = require('../../middlewares/checkIsProfessorMiddleware');
-const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
+const checkIsProfessorMiddleware = require('../middlewares/checkIsProfessorMiddleware');
+const checkTokenMiddleware = require('../middlewares/checkTokenMiddleware');
 
 router.get('/student', checkTokenMiddleware, checkIsProfessorMiddleware, async (req, res) => {
     try {

@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const jwt = require('jsonwebtoken');
-const {secret} = require('../../config/config');
-const UserModel = require('../../models/UserModel');
-const TokenModel = require('../../models/TokenModel');
-const checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
+const {secret} = require('../config/config');
+const UserModel = require('../models/UserModel');
+const TokenModel = require('../models/TokenModel');
+const checkTokenMiddleware = require('../middlewares/checkTokenMiddleware');
 const bcrypt = require('bcrypt');
 
 router.post('/reg', async (req, res) => {
