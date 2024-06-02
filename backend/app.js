@@ -3,6 +3,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var app = express();
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+
 const authRouter = require('./routes/auth');
 const classroomRouter = require('./routes/classroom');
 const subjectRouter = require('./routes/subject');
@@ -10,18 +17,6 @@ const userRouter = require('./routes/user');
 const studentSubjectRouter = require('./routes/studentSubject');
 const timetableRouter = require('./routes/timetable');
 const scheduleRouter = require('./routes/schedule');
-
-var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', authRouter);
 app.use('/', userRouter);
