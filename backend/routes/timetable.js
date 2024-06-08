@@ -18,23 +18,23 @@ function resetDate(hour, minute){
 }
 
 function timeVerification(startHour, startMinute, endHour, endMinute) {
-    if (startHour < 0 || startHour >= 24 || startMinute < 0 || startMinute >= 60 ||
-        endHour < 0 || endHour >= 24 || endMinute < 0 || endMinute >= 60) {
-        return { code: '6006', msg: 'Invalid time range', data: null };
-    }
-
-    const durationInMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
-    if (durationInMinutes < 60) {
-        return { code: '6003', msg: 'A lesson takes at least one hour', data: null };
-    }
-
     if (startHour < 9 || startHour > 20 || endHour < 10 || 
         (endHour == 21 && endMinute > 0) || endHour > 21) {
         return { code: '6004', msg: 'Class hours are from 9 am to 9 pm', data: null };
     }
 
+    if (startHour < 0 || startHour >= 24 || startMinute < 0 || startMinute >= 60 ||
+        endHour < 0 || endHour >= 24 || endMinute < 0 || endMinute >= 60) {
+        return { code: '6006', msg: 'Invalid time range', data: null };
+    }
+
     if (startHour > endHour || (startHour === endHour && startMinute >= endMinute)) {
         return { code: '6005', msg: 'Start time must be earlier than end time', data: null };
+    }
+
+    const durationInMinutes = (endHour - startHour) * 60 + (endMinute - startMinute);
+    if (durationInMinutes < 60) {
+        return { code: '6003', msg: 'A lesson takes at least one hour', data: null };
     }
 
     return null;
@@ -138,7 +138,7 @@ router.get('/timetable/classroom/:id', checkTokenMiddleware, checkIsNotStudentMi
             return res.json({
                 code: '6013',
                 msg: 'Timetable not found',
-                data: null
+                data: timetable
             });
         }
 
