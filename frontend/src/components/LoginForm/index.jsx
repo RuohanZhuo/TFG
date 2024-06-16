@@ -58,7 +58,10 @@ export default function Login(props) {
       setFormData({ ...formData, errorLogin: '', notification: newNotification })
 
       if (data.code === '0000') {
-        props.onLogin(data.data)
+        const timer = setTimeout(() => {
+          props.onLogin(data.data)
+        }, 500)
+        return () => clearTimeout(timer)
       }
 
     } catch (error) {
