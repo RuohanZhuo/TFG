@@ -14,7 +14,6 @@ import MySubjectPage from './pages/MySubjectPage/MySubjectPage'
 import SubjectDetailPage from './pages/SubjectDetailPage/SubjectDetailPage'
 import SubjectDetailStudentPage from './pages/SubjectDetailStudentPage/SubjectDetailStudentPage'
 import Profile from './pages/ProfilePage/ProfilePage'
-import Footer from './components/Footer'
 import ClassroomTimetablePage from './pages/ClassroomTimetablePage/ClassroomTimetablePage'
 
 export default class App extends Component {
@@ -56,49 +55,38 @@ export default class App extends Component {
     localStorage.clear()
   }
 
-  handleScrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
-  }
-
-
   render() {
 
     const { isAuthenticated } = this.state;
 
     return (
-      <div className="background-image">
-        <div className="header-wrapper">
-          {isAuthenticated ? <UserHeader onLogout={this.handleLogout} /> : <Header />}
-        </div>
-        <div>
-          <Routes>
-            <Route path="/" element={
-              <div className="d-flex justify-content-center align-items-center min-vh-100">
-                <div className="welcome text-center display-1">
-                  <h1 className="display-1">Welcome to UPM Book</h1>
+        <div className="background-image content">
+          <div className="header-wrapper">
+            {isAuthenticated ? <UserHeader onLogout={this.handleLogout} /> : <Header />}
+          </div>
+          <div>
+            <Routes>
+              <Route path="/" element={
+                <div className="d-flex justify-content-center align-items-center min-vh-100">
+                  <div className="welcome text-center display-1">
+                    <h1 className="display-1">Welcome to UPM Book</h1>
+                  </div>
                 </div>
-              </div>
-            } />
-            <Route path="/sign" element={<SignUp />} />
-            <Route path="/login" element={<Login onLogin={this.handleLogin} />} />
-            <Route path="/classroom" element={<ClassroomPage />} />
-            <Route path="/subject" element={<SubjectPage />} />
-            <Route path="/classroom/createClass" element={<CreateClass />} />
-            <Route path="/subject/createSubject" element={<CreateSubject />} />
-            <Route path="/mySubject" element={<MySubjectPage />} />
-            <Route path="/subject/professor/:id" element={<SubjectDetailPage />} />
-            <Route path="/subject/student/:id" element={<SubjectDetailStudentPage />} />
-            <Route path='/profile/:username' element={<Profile />} />
-            <Route path="/timetable/classroom/:id" element={<ClassroomTimetablePage />} />
-          </Routes>
+              } />
+              <Route path="/sign" element={<SignUp />} />
+              <Route path="/login" element={<Login onLogin={this.handleLogin} />} />
+              <Route path="/classroom" element={<ClassroomPage />} />
+              <Route path="/subject" element={<SubjectPage />} />
+              <Route path="/classroom/createClass" element={<CreateClass />} />
+              <Route path="/subject/createSubject" element={<CreateSubject />} />
+              <Route path="/mySubject" element={<MySubjectPage />} />
+              <Route path="/subject/professor/:id" element={<SubjectDetailPage />} />
+              <Route path="/subject/student/:id" element={<SubjectDetailStudentPage />} />
+              <Route path='/profile/:username' element={<Profile />} />
+              <Route path="/timetable/classroom/:id" element={<ClassroomTimetablePage />} />
+            </Routes>
+          </div>
         </div>
-        <div>
-          <Footer/>
-        </div>
-      </div>
     )
   }
 }
