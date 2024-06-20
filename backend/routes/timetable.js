@@ -53,6 +53,14 @@ router.post('/timetable', checkTokenMiddleware, checkIsProfessorMiddleware, asyn
             });
         }
 
+        if(!(dayOfWeek >= 1 && dayOfWeek <= 5)){
+            return res.json({
+                code: '6018',
+                msg: 'dayOfWeek must be between 1 and 5',
+                data: null
+            });
+        }
+
         const validationResult = timeVerification(startHour, startMinute, endHour, endMinute);
         if (validationResult) {
             return res.json(validationResult);
