@@ -1,0 +1,1 @@
+La contraseña del usuario es la misma que su nombre de usuario
