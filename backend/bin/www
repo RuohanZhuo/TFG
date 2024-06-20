@@ -7,7 +7,7 @@ db(() => {
    */
 
   var app = require('../app');
-  var debug = require('debug')('accounts:server');
+  var debug = require('debug')('UPMBook:server');
   var http = require('http');
 
   /**
